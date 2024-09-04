@@ -1,6 +1,6 @@
 # Modules
 
-## Why use it
+## 1. Why use it
 
 - Khi bạn phát triển ứng dụng nhỏ, chúng ta có thể code "all-in-one" (tất cả code trong 1 file/1 thư mục/1 project).
 - Với dự án lớn, chúng ta không thể làm vậy vì:
@@ -12,7 +12,7 @@
   - On/Off modules này không làm ảnh hưởng tới modules kia (nếu các modules không phụ thuộc nhau).
 - Minh họa = hình cái cây (tree). Các modules chính là các lá của 1 cái cây. Lá này rụng sẽ không làm ảnh hưởng tới cái cây, hay các lá còn lại.
 
-## Dependencies Injection
+## 2. Dependencies Injection
 
 ![Dependencies Injection](/images/Lesson4/ioc-and-mapper-in-c-1-638.jpg)
 
@@ -30,7 +30,7 @@
   - Thuộc tính appService một instance của class AppService không được khởi tạo khi sử dụng phương thức `getHello()` nhưng nó vẫn hoạt động tốt là nhờ cơ chế **Dependencies Injection**. <br/> ![App service](/images/Lesson4/appservice.png)
   - Bằng cách sử dụng decorator `@Injectable()`, tính năng của class **AppService (provider)** được phép chia sẻ và sử dụng gián tiếp bởi các class **Controller (Consumer)**. <br/> ![Injectable](/images/Lesson4/Inject.png)
 
-## Injecting a dependency
+## 3. Injecting a dependency
 
 ```plaintext
 @Controller('cats')
@@ -57,6 +57,6 @@ export class CatsController {
 - Property Injection: [https://www.tutorialsteacher.com/ioc/property-injection-using-unity-container](https://www.tutorialsteacher.com/ioc/property-injection-using-unity-container)
 - Method Injection: [https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-method-injection.html](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-method-injection.html)
 
-## Tổng kết
+## 4. Tổng kết
 
 - Framework NestJS sử dụng nguyên lý **Dependencies Injection** để xây dựng modules từ các class Controller và Service phục vụ cho việc test và maintain code một cách hiệu quả.

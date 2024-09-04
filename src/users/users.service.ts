@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
-import { genSaltSync, hashSync} from 'bcryptjs';
+import { genSaltSync, hashSync, compareSync} from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -39,6 +39,14 @@ export class UsersService {
   async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) return "Id is invalid";
     return await this.userModel.findOne({_id: id});
+  }
+
+  async findOneByEmail(email: string) {
+    return await this.userModel.findOne({email});
+  }
+
+  isValidPasword(password: string, hash: string) {
+    return compareSync(password, hash);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

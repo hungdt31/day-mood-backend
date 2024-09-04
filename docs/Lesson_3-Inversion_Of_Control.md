@@ -1,6 +1,6 @@
 # Inversion Of Control (IOC)
 
-## Definition
+## 1. Definition
 
 - Trong OOP, IoC là cách "đảo ngược" sự kiểm soát của một đối tượng, function. IoC là khái niệm (principle), không phải là "cách làm".
 
@@ -39,6 +39,6 @@ $\Rightarrow$ Sinh ra IoC để "giảm thiểu" sự phụ thuộc giữa các 
 
 **KEY WORD**: đảo ngược "phụ thuộc" $\rightarrow$ "độc lập".
 
-## How to use
+## 2. How to use
 
 - Sử dụng các "pattern" như Factory, Dependencies Injections ...

@@ -1,13 +1,13 @@
 # Mô hình Router với NestJS
 
-## Mô tả
+## 1. Mô tả
 
 ![Router](/images/Lesson2/router.png)
 
 - Controller là trung tâm hoạt động điều hướng, xử lý request, trả về response.
 - Các router trong Nest Js còn hỗ trợ middleware, cho phép các xử lý trung gian được thực hiện trước hoặc sau khi yêu cầu được xử lý bởi endpoint.
 
-## Điều hướng
+## 2. Điều hướng
 
 Controller phụ trách phần điều hướng trang
 
