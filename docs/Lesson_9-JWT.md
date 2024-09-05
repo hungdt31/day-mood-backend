@@ -56,3 +56,13 @@ client (javascript): không thể lấy cookies = hàm **document.cookie**
 Cookies sẽ tự hết hạn theo 1 thời gian nhất định (nếu set expired date) $\Rightarrow$ không dùng nó cũng tự mất.
 
 **Backend:** backend có thể lưu trữ token ở memory (RAM), disk (file), hoặc database (hay dùng nhất).
+
+## 4. Hiện thực mô hình
+
+- Tuân theo mô hình **Stateless**, với route `**/login` (đăng nhập xác thực), endpoint phải trả lại `Access Token` có payload là các thông tin xác định người dùng tồn tại trong hệ thống.
+
+![passport_local](/images/Lesson9/passport_local.png)
+
+- Mỗi lần *client* gửi request đều phải đính kèm vào *header* một `Access Token` (ex., Bearer Token), thông qua `JWT Guard` ngăn cách giữa `req` và `res` của endpoint để kiểm tra tính hợp lệ của request, nếu hợp lệ thì cho vào sử dụng tài nguyên (database, services, ...).
+
+![global_guard](/images/Lesson9/global_guard.png)
