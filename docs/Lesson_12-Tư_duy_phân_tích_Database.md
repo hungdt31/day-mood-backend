@@ -8,6 +8,8 @@ Code trang web tuyển dụng, việc làm $\Rightarrow$ kết hợp việc phâ
 - Nhà tuyển dụng có thể đăng việc làm
 - Đặt lịch (schedule) gửi mail cho subscribers.
 
+Tham khảo: [https://topdev.vn/](https://topdev.vn/), [https://topdev.vn/](https://topdev.vn/)
+
 **Phân tích chi tiết chức năng**:
 
 - Đăng ký, đăng nhập
