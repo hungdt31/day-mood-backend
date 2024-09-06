@@ -60,3 +60,4 @@ export class CatsController {
 ## 4. Tổng kết
 
 - Framework NestJS sử dụng nguyên lý **Dependencies Injection** để xây dựng modules từ các class Controller và Service phục vụ cho việc test và maintain code một cách hiệu quả.
+- Cách tạo nhanh modules với nest cli: `nest g resource <module_name>`
