@@ -5,11 +5,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
 import { genSaltSync, hashSync, compareSync} from 'bcryptjs';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel : Model<User>
+    @InjectModel(User.name) private userModel : SoftDeleteModel<UserDocument>
   ) {}
   getHashedPassword = (password: string) => {
     const salt = genSaltSync(10);
@@ -22,9 +24,7 @@ export class UsersService {
     let user = await this.userModel.create({
       email,
       password: hashedMyPassword,
-      name,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      name
     });
     return {
       messege: "Create user success",
@@ -56,6 +56,6 @@ export class UsersService {
 
   async remove(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) return "Id is invalid";
-    return await this.userModel.deleteOne({_id: id});
+    return await this.userModel.softDelete({_id: id});
   }
 }
