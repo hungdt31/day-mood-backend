@@ -8,6 +8,8 @@ Code trang web tuyển dụng, việc làm $\Rightarrow$ kết hợp việc phâ
 - Nhà tuyển dụng có thể đăng việc làm
 - Đặt lịch (schedule) gửi mail cho subscribers.
 
+Tham khảo: [https://topdev.vn/](https://topdev.vn/), [https://itviec.com](https://itviec.com/?utm_campaign=gsn_brand_hcm&utm_source=google&utm_medium=cpc&utm_campaign=gsn_brand_hcm&utm_term=itviec&gad_source=1)
+
 **Phân tích chi tiết chức năng**:
 
 - Đăng ký, đăng nhập
@@ -116,7 +118,7 @@ Nếu 1 ứng viên subscribe 1 skill $\Rightarrow$ gửi mail hàng tuần về
 - email: string
 - skill: string
 
-## 3.7. Roles
+### 3.7. Roles
 
 - name: string `<unique>`
 - description: string
