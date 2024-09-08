@@ -42,9 +42,37 @@ export class UsersService {
   // ....
 }
 ```
+
 ## 3. Phân trang
 
 Converts queryString into a MongoDB query object: [https://www.npmjs.com/package/api-query-params](https://www.npmjs.com/package/api-query-params)
+
+**Input**: Front end truyền lên
+
+- page: number (trang hiện tại)
+- limit: number (số lượng bản ghi muốn lấy).
+- query string: điều kiện query (ví dụ tìm theo tên, tìm theo email, ...)
+
+**Output**:
+
+```ts
+return {
+  meta: {
+    current: page, // trang hiện tại
+    pageSize: limit, // số lượng bản ghi đã lấy
+    pages: totalPages, // tổng số trang với điều kiện query
+    total: totalItems // tổng số phần tử (số bản ghi)
+  },
+  result // kết quả query
+}
+```
+
+**Logic xử lý**:
+
+- Để phân trang dữ liệu, cần tìm hiểu offset và limit.
+- Cần lấy ra @Query page/limit.
+- Count tổng bản ghi với điều kiện filter.
+- Tính offset.
 
 ## 4. CORS
 

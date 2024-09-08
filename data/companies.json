@@ -1,0 +1,127 @@
+[
+  {
+    "name": "XYZ Solutions Ltd",
+    "address": "456, Green Valley Lane",
+    "description": "Financial Consultancy"
+  },
+  {
+    "name": "Sunshine Enterprises",
+    "address": "789, Ocean Breeze Avenue",
+    "description": "Event Management"
+  },
+  {
+    "name": "Quick Logistics",
+    "address": "321, Highway Road",
+    "description": "Logistics and Transport"
+  },
+  {
+    "name": "Future Innovations",
+    "address": "654, Tech Park Boulevard",
+    "description": "Software Development"
+  },
+  {
+    "name": "Bright Horizons Corp",
+    "address": "987, Meadow Ridge",
+    "description": "HR Solutions"
+  },
+  {
+    "name": "Prime Marketing Group",
+    "address": "159, Central Plaza",
+    "description": "Digital Marketing"
+  },
+  {
+    "name": "Apex Builders",
+    "address": "753, Redwood Circle",
+    "description": "Construction Services"
+  },
+  {
+    "name": "EcoTech Solutions",
+    "address": "951, Riverbank Road",
+    "description": "Renewable Energy"
+  },
+  {
+    "name": "Urban Dynamics Ltd",
+    "address": "369, Horizon Boulevard",
+    "description": "Urban Planning"
+  },
+  {
+    "name": "NextGen Advertising",
+    "address": "852, Creative District",
+    "description": "Advertising and PR"
+  },
+  {
+    "name": "Blue Sky Retailers",
+    "address": "741, Shopping Square",
+    "description": "Retail Distribution"
+  },
+  {
+    "name": "SecureTech Solutions",
+    "address": "258, Security Drive",
+    "description": "Cybersecurity"
+  },
+  {
+    "name": "Innovate Ventures",
+    "address": "654, Startup Lane",
+    "description": "Venture Capital"
+  },
+  {
+    "name": "Global Traders Corp",
+    "address": "369, Commerce Street",
+    "description": "International Trade"
+  },
+  {
+    "name": "Green Earth Partners",
+    "address": "147, EcoPark Avenue",
+    "description": "Environmental Consulting"
+  },
+  {
+    "name": "Metro Designs",
+    "address": "951, Fashion District",
+    "description": "Interior Design"
+  },
+  {
+    "name": "Titan Manufacturing",
+    "address": "852, Industrial Road",
+    "description": "Industrial Manufacturing"
+  },
+  {
+    "name": "Infinity Solutions",
+    "address": "456, Technology Park",
+    "description": "IT Services"
+  },
+  {
+    "name": "Alpha Med Services",
+    "address": "789, Health Plaza",
+    "description": "Medical Equipment"
+  },
+  {
+    "name": "Oceanic Shipping Co",
+    "address": "321, Dockside Lane",
+    "description": "Shipping Services"
+  },
+  {
+    "name": "Peak Performance",
+    "address": "654, Fitness Avenue",
+    "description": "Sports Training"
+  },
+  {
+    "name": "Starlight Productions",
+    "address": "159, Entertainment District",
+    "description": "Film Production"
+  },
+  {
+    "name": "Silverline Travel",
+    "address": "753, Vacation Road",
+    "description": "Travel and Tourism"
+  },
+  {
+    "name": "Swift Delivery Services",
+    "address": "951, Courier Avenue",
+    "description": "Courier Services"
+  },
+  {
+    "name": "Bright Minds Academy",
+    "address": "369, Knowledge Park",
+    "description": "Education and Tutoring"
+  }
+]

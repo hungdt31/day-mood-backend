@@ -2,40 +2,19 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
 // ở SQL document = table
-export type UserDocument = HydratedDocument<User>;
+export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema({ timestamps: true })
-export class User {
-  @Prop({ required: true })
-  email: string;
-
-  @Prop({ required: true })
-  password: string;
-
+export class Company {
   @Prop()
   name: string;
 
   @Prop()
-  age: number;
-
-  @Prop()
-  gender: string;
-
-  @Prop()
-  phone: string;
-  
-  @Prop()
   address: string;
 
-  @Prop({ default: 'user' })
-  role: string;
-
-  @Prop({ type: Object})
-  company: {
-    _id: mongoose.Schema.Types.ObjectId;
-    name: string;
-  };
-
+  @Prop()
+  description: string;
+  
   @Prop({ type: Object})
   createdBy : {
     _id: mongoose.Schema.Types.ObjectId;
@@ -55,9 +34,6 @@ export class User {
   };
 
   @Prop()
-  refreshToken: string;
-
-  @Prop()
   createdAt: Date;
 
   @Prop()
@@ -70,4 +46,4 @@ export class User {
   isDeleted: boolean;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const CompanySchema = SchemaFactory.createForClass(Company);
