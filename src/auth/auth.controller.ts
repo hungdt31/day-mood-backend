@@ -1,8 +1,10 @@
-import { Post, Request, UseGuards, Controller, Get, Render } from '@nestjs/common';
+import { Post, UseGuards, Controller, Get, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Public } from 'src/decorator/customize';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { LocalAuthGuard } from './local-auth.guard';
-
+import { IUser } from 'src/users/users.interface';
+import { RegisterDto } from './dto/create-user.dto';
+import { UniqueGmail } from './gmail.guard';
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -12,12 +14,20 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  login(@User() user : IUser) {
+    return this.authService.login(user);
   }
 
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  getProfile(@User() user : IUser) {
+    return user;
+  }
+
+  @Public()
+  @UseGuards(UniqueGmail)
+  @Post('register')
+  @ResponseMessage("Register success")
+  register(@Body() regiterDto : RegisterDto) {
+    return this.authService.register(regiterDto);
   }
 }

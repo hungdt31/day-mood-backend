@@ -27,8 +27,8 @@ export class CompaniesService {
     delete filter.page;
     delete filter.limit;
 
-    const offset = (currentPage - 1) * limit;
     const defaultLimit = limit || 10;
+    const offset = (currentPage - 1) * defaultLimit;
 
     const totalItems = (await this.companyModel.find(filter)).length;
     const totalPages = Math.ceil(+totalItems / defaultLimit);

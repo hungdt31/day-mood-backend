@@ -18,7 +18,7 @@ export class User {
   @Prop()
   age: number;
 
-  @Prop()
+  @Prop({ default: "unknown"})
   gender: string;
 
   @Prop()
