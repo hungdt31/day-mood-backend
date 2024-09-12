@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: black;
   color: white;
   display: flex;
@@ -8,7 +8,8 @@ body {
   justify-content: center;
 }
 h1 {
-  font-size: 48px;
+  border-top: #7e0537 2px solid;
+  padding: 20px;
   font-weight: bold;
   background: linear-gradient(120deg, #e21c6e 0%, rgb(218, 108, 117) 50%, #af002d 100%);
   -webkit-background-clip: text;
@@ -24,8 +25,30 @@ h1 {
   margin: 10px;
   gap: 10px;
 }
-.box {
+.card {
+  background-color: #63042c;
+  color: white;
   border-radius: 10px;
-  border: 2px solid white;
   padding: 10px;
+  box-shadow: 0px 0px 5px #af002d;
+  text-align: center;
+  min-width: 150px;
+}
+h1 {
+  text-align: center;
+}
+p {
+  text-align: center;
+}
+.container {
+  border: #7e0537 2px solid;
+  box-shadow: #af002d 0px 0px 10px;
+  border-radius: 15px;
+  padding-bottom: 20px;
+}
+.final-word {
+  text-align:end;
+  margin-right: 20px;
+  margin-top: 40px;
+  color: #e21c6e;
 }

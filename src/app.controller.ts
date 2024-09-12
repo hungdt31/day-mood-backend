@@ -13,23 +13,25 @@ export class AppController {
   @Version('1') // => api/v1
   @Public()
   @Get() //  => api (restful)
-  @Render('home1') // => view (html, ejs, ...)
+  @Render('home') // => view (html, ejs, ...)
   handleHomePage() {
     // port from .env
     console.log(">> check port = ", this.configService.get<string>('PORT'));  
-    const message = this.appService.getHello(); // gọi đến service để lấy data
-    return { message }; // truyền data vào view
+    const version = "1";
+    const message = this.appService.getHelloVersion1(); // gọi đến service để lấy data
+    return { message, version }; // truyền data vào view
     // return "this.appService.getHello()";
   }
 
   @Version('2') // => api/v2
   @Public()
   @Get() //  => api (restful)
-  @Render('home2') // => view (html, ejs, ...)
+  @Render('home') // => view (html, ejs, ...)
   handleHomePage2() {
     // port from .env
     console.log(">> check port = ", this.configService.get<string>('PORT'));  
-    const message = "This version will be developed in the future.";
-    return { message }; // truyền data vào view
+    const version = "2";
+    const message = this.appService.getHelloVersion2(); // gọi đến service để lấy data
+    return { message, version }; // truyền data vào view
   }
 }
