@@ -17,6 +17,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel : SoftDeleteModel<UserDocument>
   ) {}
+
   getHashedPassword = (password: string) => {
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
@@ -133,5 +134,15 @@ export class UsersService {
       }
     });
     return await this.userModel.softDelete({_id: id});
+  }
+
+  async updateUserToken (id: string, refreshToken: string) {
+    return await this.userModel.updateOne({_id: id}, {
+      refreshToken: refreshToken
+    });
+  }
+
+  async findOneByRefreshToken(refreshToken: string) {
+    return await this.userModel.findOne({refreshToken});
   }
 }
