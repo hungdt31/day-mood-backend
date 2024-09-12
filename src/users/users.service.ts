@@ -86,9 +86,6 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new HttpException("Id is invalid", HttpStatus.BAD_REQUEST);
-    };
     const res = await this.userModel.findOne(
       {
         _id: id,
@@ -110,9 +107,6 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto, user: IUser) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new HttpException("Id is invalid", HttpStatus.BAD_REQUEST);
-    };
     return this.userModel.updateOne({_id: id}, {
       ... updateUserDto,
       updatedBy: {
@@ -123,9 +117,6 @@ export class UsersService {
   }
 
   async remove(id: string, user: IUser) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new HttpException("Id is invalid", HttpStatus.BAD_REQUEST);
-    };
     // update deletedBy with user action
     await this.userModel.updateOne({_id: id}, {
       deletedBy: {

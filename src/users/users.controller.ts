@@ -6,6 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from './users.interface';
 import { UniqueGmail } from 'src/auth/gmail.guard';
+import { checkValidId } from 'src/core/validId.guard';
 
 @Controller('users')
 export class UsersController {
@@ -35,6 +36,7 @@ export class UsersController {
   // lấy thông tin của 1 người dùng
   @Public()
   @Get(':id')
+  @UseGuards(checkValidId)
   @ResponseMessage("Got a user")
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
@@ -42,6 +44,7 @@ export class UsersController {
 
   // chỉnh sửa thông tin người dùng
   @Patch(':id')
+  @UseGuards(checkValidId)
   @ResponseMessage("Updated user")
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @User() user : IUser) {
     return this.usersService.update(id, updateUserDto, user);
@@ -49,6 +52,7 @@ export class UsersController {
 
   // đưa một người dùng vào thùng rác
   @Delete(':id')
+  @UseGuards(checkValidId)
   @ResponseMessage("Took a user to trash")
   remove(@Param('id') id: string, @User() user : IUser) {
     return this.usersService.remove(id, user);

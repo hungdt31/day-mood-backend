@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { softDeletePlugin } from "soft-delete-plugin-mongoose"
 import { CompaniesModule } from './companies/companies.module';
 import { DataExamplesModule } from './data-examples/data-examples.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { RolesModule } from './roles/roles.module';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -28,6 +30,8 @@ import { DataExamplesModule } from './data-examples/data-examples.module';
     AuthModule,
     CompaniesModule,
     DataExamplesModule,
+    PermissionsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
