@@ -134,3 +134,72 @@ Mỗi permission chính là 1 api ở backend:
   - Sử dụng **Soft delete**
 
 - **Response**:
+
+## 3. Role
+
+### 3.1. Create a Role
+
+**POST /api/v1/role**:
+
+- **Yêu cầu**:
+  - Truyền JWT ở header
+  - Truyền body dưới dạng raw/JSON, **bao gồm các trường name, description, isActive, permissions**.
+- **Backend xử lý**: không lưu trùng tên của group, **Check "name" trước khi lưu**.
+- **Response**:
+
+```json
+{
+  "statusCode": 201,
+  "message": "Create a new Role",
+  "data": {
+    "_id": "...",
+    "name": "..."
+  }
+}
+```
+
+### 3.2. Update a Role
+
+**PATCH /api/v1/roles/:id**
+
+- **Yêu cầu**:
+  - Truyền JWT ở header
+  - Truyền data ở body, dưới dạng raw/json
+
+- **Backend cần check "name"** trước khi cho update, đảm bảo **"name" là khác nhau**.
+- **Response**:
+
+```json
+{
+  "statusCode": 200,
+  "message": "Update a Role",
+  "data": {
+    // ....
+  }
+}
+```
+
+### 3.3. Fetch Role with pagination
+
+**GET /api/v1/role**:
+
+- **Yêu cầu**:
+  - Truyền jwt ở header
+  - Truyền động params trên url
+
+### 3.4. Fetch Role by ID
+
+**GET /api/v1/roles/:id**:
+
+- **Yêu cầu**:
+  - Truyền JWT ở header
+  - Truyền động id trên url
+
+### 3.5. Delete a Role
+
+**DELETE /api/v1/roles/:id**:
+
+- **Yêu cầu**:
+  - Truyền JWT ở header
+  - Truyền động id trên url
+  - Sử dụng **soft delete**

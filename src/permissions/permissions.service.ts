@@ -5,8 +5,8 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Permission } from './schemas/permission.schema';
 import { PermissionDocument } from './schemas/permission.schema';
-import { IUser } from 'src/users/users.interface';
-import aqp from 'api-query-params';
+import { IUser } from 'src/interface/users.interface';
+import { PaginateInfo } from 'src/interface/paginate.interface';
 
 @Injectable()
 export class PermissionsService {
@@ -14,17 +14,18 @@ export class PermissionsService {
     @InjectModel(Permission.name) private readonly permissionModel: SoftDeleteModel<PermissionDocument>
   ) {}
 
-  async create(createPermissionDto: CreatePermissionDto) : Promise<PermissionDocument> {
-    return await this.permissionModel.create(createPermissionDto);
+  async create(createPermissionDto: CreatePermissionDto, user: IUser) : Promise<PermissionDocument> {
+    return await this.permissionModel.create({
+      ... createPermissionDto,
+      createdBy: {
+        _id: user._id,
+        email: user.email
+      }
+    });
   }
 
-  async findAll(currentPage: number, limit: number, queryString: string) {
-    const { filter, sort, projection, population } = aqp(queryString);
-    delete filter.page;
-    delete filter.limit;
-
-    const defaultLimit = limit || 10;
-    const offset = (currentPage - 1) * defaultLimit;
+  async findAll(info : PaginateInfo) {
+    const { offset, defaultLimit, sort, projection, population, filter, currentPage } = info;
 
     const totalItems = (await this.permissionModel.find(filter)).length;
     const totalPages = Math.ceil(+totalItems / defaultLimit);
@@ -43,8 +44,8 @@ export class PermissionsService {
             totalPermissions: +totalItems,
             permissionCount: data.length,
             permissionsPerPage: defaultLimit,
-            totalPages: totalPages,
-            currentPage: currentPage
+            totalPages,
+            currentPage
           },
           result: data
         }

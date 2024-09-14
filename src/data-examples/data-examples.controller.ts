@@ -3,9 +3,11 @@ import { DataExamplesService } from './data-examples.service';
 import { CreateDataExampleDto } from './dto/create-data-example.dto';
 import { UpdateDataExampleDto } from './dto/update-data-example.dto';
 import { User } from 'src/decorator/customize';
-import { IUser } from 'src/users/users.interface';
+import { IUser } from 'src/interface/users.interface';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('data-examples')
+@ApiTags('data-examples')
+@Controller({ path: 'data-examples', version: '1' })
 export class DataExamplesController {
   constructor(private readonly dataExamplesService: DataExamplesService) {}
 

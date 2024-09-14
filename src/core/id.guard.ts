@@ -8,12 +8,12 @@ export class checkValidId implements CanActivate {
     context: ExecutionContext,
   ): Promise<any> {
     const request = context.switchToHttp().getRequest();
-    const method = request.params.id;
+    const id = request.params.id;
 
     // Check if the email is unique
-    const isValid = mongoose.Types.ObjectId.isValid(method);
+    const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) {
-      throw new BadRequestException('Id is not valid');
+      throw new BadRequestException('Id is invalid');
     }
     return true;
   }

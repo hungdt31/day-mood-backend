@@ -1,20 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Version, VERSION_NEUTRAL } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
-import { Public, ResponseMessage, User } from 'src/decorator/customize';
-import { IUser } from './users.interface';
+import { GetPaginateInfo, Public, ResponseMessage, User } from 'src/decorator/customize';
+import { IUser } from '../interface/users.interface';
 import { UniqueGmail } from 'src/auth/gmail.guard';
-import { checkValidId } from 'src/core/validId.guard';
+import { checkValidId } from 'src/core/id.guard';
+import { PaginateInfo } from 'src/interface/paginate.interface';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('users')
+@ApiTags('users')
+@Controller({ path: 'users', version: '1' })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @UseGuards(UniqueGmail)
-  @ResponseMessage("Created a user")
+  @ResponseMessage("Create a user")
   create(@Body() createUserDto: CreateUserDto, @User() user : IUser) {
     // tag Body = request.body
     // @Body là một overloading decorator, nó giúp chúng ta lấy dữ liệu từ request body ở nhiều kiểu dữ liệu khác nhau 
@@ -24,20 +27,18 @@ export class UsersController {
 
   // lấy thông tin của người dùng có phân trang
   @Get()
-  @ResponseMessage("Got a number of users")
+  @ResponseMessage("Get a list of users")
   findAll(
-    @Query("page") currentPage: number,
-    @Query("limit") limit: number,
-    @Query() queryString: string
+    @GetPaginateInfo() info: PaginateInfo
   ) {
-    return this.usersService.findAll(+currentPage, +limit, queryString);
+    return this.usersService.findAll(info);
   }
 
   // lấy thông tin của 1 người dùng
   @Public()
   @Get(':id')
   @UseGuards(checkValidId)
-  @ResponseMessage("Got a user")
+  @ResponseMessage("Get a user")
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
@@ -45,7 +46,7 @@ export class UsersController {
   // chỉnh sửa thông tin người dùng
   @Patch(':id')
   @UseGuards(checkValidId)
-  @ResponseMessage("Updated user")
+  @ResponseMessage("Update a user")
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @User() user : IUser) {
     return this.usersService.update(id, updateUserDto, user);
   }
@@ -53,7 +54,7 @@ export class UsersController {
   // đưa một người dùng vào thùng rác
   @Delete(':id')
   @UseGuards(checkValidId)
-  @ResponseMessage("Took a user to trash")
+  @ResponseMessage("Take a user to trash")
   remove(@Param('id') id: string, @User() user : IUser) {
     return this.usersService.remove(id, user);
   }

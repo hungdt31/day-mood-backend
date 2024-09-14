@@ -1,4 +1,4 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,9 +8,10 @@ import { genSaltSync, hashSync, compareSync} from 'bcryptjs';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { UserDocument } from './schemas/user.schema';
 import { RegisterDto } from 'src/auth/dto/create-user.dto';
-import { IUser } from './users.interface';
+import { IUser } from '../interface/users.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import aqp from 'api-query-params';
+import { PaginateInfo } from 'src/interface/paginate.interface';
 
 @Injectable()
 export class UsersService {
@@ -51,15 +52,9 @@ export class UsersService {
     return user;
   }
   
-  async findAll(currentPage: number, limit: number, queryString: string) {
-    const { filter, sort, projection, population } = aqp(queryString);
-    delete filter.page;
-    delete filter.limit;
-
-    const defaultLimit = limit || 10;
-    const offset = (currentPage - 1) * defaultLimit;
+  async findAll(info: PaginateInfo) {
+    const { offset, defaultLimit, sort, projection, population, filter, currentPage } = info;
     
-
     const totalItems = (await this.userModel.find(filter)).length;
     const totalPages = Math.ceil(+totalItems / defaultLimit);
 
@@ -77,8 +72,8 @@ export class UsersService {
             totalUsers: +totalItems,
             userCount: data.length,
             usersPerPage: defaultLimit,
-            totalPages: totalPages,
-            currentPage: currentPage
+            totalPages,
+            currentPage
           },
           result: data
         }
@@ -86,12 +81,10 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    const res = await this.userModel.findOne(
-      {
-        _id: id,
-        isDeleted: false
-      },
-    ).select("-password -deletedAt -deletedBy -updatedAt -updatedBy -createdAt -createdBy -isDeleted");
+    const res = await this.userModel.findOne({ _id: id, isDeleted: false })
+      .select("-password")
+      .populate({ path: "role", select: 'name permissions' });
+
     if (!res) {
       throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
@@ -99,7 +92,7 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return await this.userModel.findOne({email});
+    return await this.userModel.findOne({email}).populate({ path: "role", select: 'name permissions' });
   }
 
   isValidPasword(password: string, hash: string) {
@@ -118,6 +111,10 @@ export class UsersService {
 
   async remove(id: string, user: IUser) {
     // update deletedBy with user action
+    const foundUser = await this.userModel.findById(id);
+    if (foundUser && foundUser.email === "admin@gmail.com") {
+      throw new BadRequestException("You can't delete admin account")
+    }
     await this.userModel.updateOne({_id: id}, {
       deletedBy: {
         _id: user._id,

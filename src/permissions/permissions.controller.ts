@@ -2,30 +2,34 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } f
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { GetPaginateInfo, ResponseMessage, User } from 'src/decorator/customize';
 import { ExistPermission } from './permissions.guard';
-import { checkValidId } from 'src/core/validId.guard';
-import { IUser } from 'src/users/users.interface';
+import { checkValidId } from 'src/core/id.guard';
+import { IUser } from 'src/interface/users.interface';
+import { PaginateInfo } from 'src/interface/paginate.interface';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('permissions')
+@ApiTags('permissions')
+@Controller({ path: 'permissions', version: '1' })
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @Post()
   @UseGuards(ExistPermission)
   @ResponseMessage('Create permission successfully')
-  create(@Body() createPermissionDto: CreatePermissionDto) {
-    return this.permissionsService.create(createPermissionDto);
+  create(
+    @Body() createPermissionDto: CreatePermissionDto,
+    @User() user: IUser
+  ) {
+    return this.permissionsService.create(createPermissionDto, user);
   }
 
   @Get()
   @ResponseMessage("Fetch list of permissions with pagination")
   findByPagination(
-    @Query("page") currentPage: number,
-    @Query("limit") limit: number,
-    @Query() queryString: string
+    @GetPaginateInfo() info: PaginateInfo
   ) {
-    return this.permissionsService.findAll(+currentPage, +limit, queryString);
+    return this.permissionsService.findAll(info);
   }
 
   @Get(':id')

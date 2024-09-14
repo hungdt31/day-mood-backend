@@ -13,6 +13,7 @@ import { UserSchema, User } from './schemas/user.schema';
       },
     ]),
   ],
+  // set up controller follow the version
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],

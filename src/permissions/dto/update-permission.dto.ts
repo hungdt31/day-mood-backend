@@ -1,4 +1,4 @@
-import { PartialType, OmitType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 import { CreatePermissionDto } from './create-permission.dto';
 
-export class UpdatePermissionDto extends OmitType(CreatePermissionDto, ["name", "module", "method", "apiPath"] as const) {}
+export class UpdatePermissionDto extends PartialType(CreatePermissionDto) {}

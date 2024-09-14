@@ -1,16 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { IUser } from 'src/users/users.interface';
+import { IUser } from 'src/interface/users.interface';
 import { RegisterDto } from './dto/create-user.dto'; 
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import ms from 'ms';
+import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private roleService: RolesService,
     private jwtService: JwtService,
     private configService: ConfigService
   ) {}
@@ -20,7 +22,19 @@ export class AuthService {
     const user = await this.usersService.findOneByEmail(username);
     if (user) {
       const isValid = this.usersService.isValidPasword(pass, user.password);
-      if (isValid) return user;
+      if (isValid) {
+        const userRole = user.role as unknown as { _id: string, name: string };
+
+        return {
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          role: {
+            _id: userRole._id,
+            name: userRole.name
+          }
+        }
+      };
     }
     return null;
   }
@@ -62,7 +76,8 @@ export class AuthService {
       user: {
         _id,
         email,
-        name
+        name,
+        role
       }
     };
   }

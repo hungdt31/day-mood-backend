@@ -14,7 +14,7 @@ export class UniqueGmail implements CanActivate {
     // Check if the email is unique
     const user = await this.usersService.findOneByEmail(email);
     if (user) {
-      throw new BadRequestException('Email already exists. Please use a different email.');
+      throw new BadRequestException(`Email ${email} already exists. Please use a different email.`);
     }
     return true;
   }

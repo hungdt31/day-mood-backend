@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CompaniesController } from './companies.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CompanySchema, Company } from './schemas/company.entity';
+import { CompanySchema, Company } from './schemas/company.schema';
 
 @Module({
   imports: [

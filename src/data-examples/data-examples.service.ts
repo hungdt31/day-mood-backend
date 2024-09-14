@@ -3,9 +3,9 @@ import { CreateDataExampleDto } from './dto/create-data-example.dto';
 import { UpdateDataExampleDto } from './dto/update-data-example.dto';
 import fs from 'fs';
 import { InjectModel } from '@nestjs/mongoose';
-import { Company, CompanyDocument } from 'src/companies/schemas/company.entity';
+import { Company, CompanyDocument } from 'src/companies/schemas/company.schema';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
-import { IUser } from 'src/users/users.interface';
+import { IUser } from 'src/interface/users.interface';
 import { Model } from 'mongoose';
 
 @Injectable()

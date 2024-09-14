@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsNotEmptyObject, isNotEmptyObject, IsObject, ValidateNested } from "class-validator";
+import { IsEmail, IsMongoId, IsNotEmpty, IsNotEmptyObject, isNotEmptyObject, IsObject, ValidateNested } from "class-validator";
 import mongoose from "mongoose";
 
 class Company {
@@ -27,10 +27,12 @@ export class CreateUserDto {
   @IsNotEmpty()
   gender: string;
 
+  @IsNotEmpty()
+  @IsMongoId()
   role: string;
 
-  @IsNotEmptyObject()
-  @IsObject()
+  // @IsNotEmptyObject()
+  // @IsObject()
   @ValidateNested()
   @Type(() => Company)
   company: Company;

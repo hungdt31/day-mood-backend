@@ -2,10 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
-import { IUser } from 'src/users/users.interface';
+import { GetPaginateInfo, ResponseMessage, User } from 'src/decorator/customize';
+import { IUser } from 'src/interface/users.interface';
+import { PaginateInfo } from 'src/interface/paginate.interface';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('companies')
+@ApiTags('companies')
+@Controller({ path: 'companies', version: '1' })
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
@@ -17,11 +20,9 @@ export class CompaniesController {
   @Get()
   @ResponseMessage("Fetch list of companies with pagination")
   findAll(
-    @Query("page") currentPage: number,
-    @Query("limit") limit: number,
-    @Query() queryString: string
+    @GetPaginateInfo() info: PaginateInfo
   ) {
-    return this.companiesService.findAll(+currentPage, +limit, queryString);
+    return this.companiesService.findAll(info);
   }
 
   @Get(':id')

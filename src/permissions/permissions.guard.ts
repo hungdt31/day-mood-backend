@@ -15,7 +15,7 @@ export class ExistPermission implements CanActivate {
     // Check if the email is unique
     const isValid = await this.permissionsService.checkNewValidPermission(method, apiPath);
     if (!isValid) {
-      throw new BadRequestException('Permission already exists');
+      throw new BadRequestException(`Permission with apiPath "${apiPath}", method "${method}" already exists`);
     }
     return true;
   }

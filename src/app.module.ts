@@ -10,6 +10,8 @@ import { CompaniesModule } from './companies/companies.module';
 import { DataExamplesModule } from './data-examples/data-examples.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
+import { DatabasesModule } from './databases/databases.module';
+import { JobsModule } from './jobs/jobs.module';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -32,6 +34,8 @@ import { RolesModule } from './roles/roles.module';
     DataExamplesModule,
     PermissionsModule,
     RolesModule,
+    DatabasesModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
