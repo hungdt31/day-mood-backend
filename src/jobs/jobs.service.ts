@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
@@ -14,6 +14,11 @@ export class JobsService {
     private readonly jobModel: SoftDeleteModel<JobDocument>
   ) {}
   async create(createJobDto: CreateJobDto, user: IUser) {
+    const { startDate, endDate } = createJobDto;
+    const isStartDateBeforeEndDate = startDate.getTime() < endDate.getTime();
+    if (!isStartDateBeforeEndDate) {
+      throw new BadRequestException('Start date must be before end date');
+    }
     const job = await this.jobModel.create({
       ...createJobDto,
       createdBy: {

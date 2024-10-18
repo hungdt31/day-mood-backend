@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { RolesModule } from 'src/roles/roles.module';
+// import PrismaService
 
 @Module({
   imports: [
