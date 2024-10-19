@@ -13,10 +13,25 @@ export class Company {
   address: string;
 
   @Prop()
-  description: string;
+  industry: string;
 
   @Prop()
-  logo: string;
+  description: string;
+
+  @Prop({ type: Object })
+  logo: {
+    _id: mongoose.Schema.Types.ObjectId;
+    filename: string;
+    folderType: string;
+  };
+
+  // Add the images field here to store an array of image files
+  @Prop({ type: [{ _id: mongoose.Schema.Types.ObjectId, filename: String, folderType: String }] })
+  covers: {
+    _id: mongoose.Schema.Types.ObjectId;
+    filename: string;
+    folderType: string;
+  }[];
 
   @Prop({ type: Object })
   createdBy: {
