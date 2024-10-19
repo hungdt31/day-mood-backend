@@ -42,7 +42,7 @@ export class FilesController {
             /^(image\/jpg|image\/jpeg|image\/png|text\/plain|application\/pdf|application\/vnd.openxmlformats-officedocument.wordprocessingml.document)$/,
         })
         .addMaxSizeValidator({
-          maxSize: 1000 * 1024,
+          maxSize: 5000 * 1024,
         })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,

@@ -24,14 +24,21 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // get permissions from role
     const userRole = role as unknown as { _id: string; name: string };
-    const foundRole = await this.roleService.findOne(userRole._id);
+    if (userRole) {
+      const foundRole = await this.roleService.findOne(userRole._id);
 
+      return {
+        _id,
+        email,
+        name,
+        role,
+        permissions: foundRole?.permissions ?? [],
+      };
+    }
     return {
       _id,
       email,
-      name,
-      role,
-      permissions: foundRole?.permissions ?? [],
-    };
+      name
+    }
   }
 }

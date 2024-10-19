@@ -136,3 +136,7 @@ Với các endpoint sử dụng param `:id`, cần check id có hợp lệ hay k
     }
 }
 ```
+
+## 2. Resumes
+
+**nest g resource resumes --no-spec**.

@@ -6,13 +6,11 @@ import { RegisterDto } from './dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import ms from 'ms';
-import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private roleService: RolesService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -23,17 +21,26 @@ export class AuthService {
     if (user) {
       const isValid = this.usersService.isValidPasword(pass, user.password);
       if (isValid) {
-        const userRole = user.role as unknown as { _id: string; name: string };
+        if (user.role) {
+          const userRole = user.role as unknown as { _id: string; name: string };
 
-        return {
-          _id: user._id,
-          email: user.email,
-          name: user.name,
-          role: {
-            _id: userRole._id,
-            name: userRole.name,
-          },
-        };
+          return {
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+            role: {
+              _id: userRole._id,
+              name: userRole.name,
+            },
+          };
+        }
+        else {
+          return {
+            _id: user._id,
+            email: user.email,
+            name: user.name
+          }
+        }
       }
     }
     return null;

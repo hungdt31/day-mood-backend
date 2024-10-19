@@ -20,5 +20,6 @@ import { FileSchema, File } from './entities/file.entity';
   ],
   controllers: [FilesController],
   providers: [FilesService],
+  exports: [FilesService]
 })
 export class FilesModule {}
