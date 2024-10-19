@@ -1,38 +1,38 @@
-import { IsEnum, IsNotEmpty } from "class-validator"
-import { ApiProperty } from "@nestjs/swagger"
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 enum Method {
-  GET = "GET",
-  POST = "POST",
-  PUT = "PUT",
-  PATCH = "PATCH",
-  DELETE = "DELETE",
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
 }
 
 enum Module {
-  USER = "USERS",
-  PERMISSION = "PERMISSIONS",
-  ROLE = "ROLES",
-  COMPANY = "COMPANIES",
-  RESUME = "RESUMES",
+  USER = 'USERS',
+  PERMISSION = 'PERMISSIONS',
+  ROLE = 'ROLES',
+  COMPANY = 'COMPANIES',
+  RESUME = 'RESUMES',
 }
 
 export class CreatePermissionDto {
   @ApiProperty()
   @IsNotEmpty()
-  name: string
+  name: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  apiPath: string
+  apiPath: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsEnum(Method)
-  method: string
+  method: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsEnum(Module)
-  module: string 
+  module: string;
 }

@@ -18,8 +18,8 @@ export class AppController {
   @Render('home') // => view (html, ejs, ...)
   handleHomePage() {
     // port from .env
-    console.log(">> check port = ", this.configService.get<string>('PORT'));  
-    const version = "1";
+    console.log('>> check port = ', this.configService.get<string>('PORT'));
+    const version = '1';
     const message = this.appService.getHelloVersion1(); // gọi đến service để lấy data
     return { message, version }; // truyền data vào view
     // return "this.appService.getHello()";
@@ -31,8 +31,8 @@ export class AppController {
   @Render('home') // => view (html, ejs, ...)
   handleHomePage2() {
     // port from .env
-    console.log(">> check port = ", this.configService.get<string>('PORT'));  
-    const version = "2";
+    console.log('>> check port = ', this.configService.get<string>('PORT'));
+    const version = '2';
     const message = this.appService.getHelloVersion2(); // gọi đến service để lấy data
     return { message, version }; // truyền data vào view
   }

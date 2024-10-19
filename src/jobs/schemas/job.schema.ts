@@ -7,7 +7,6 @@ export type JobDocument = HydratedDocument<Job>;
 
 @Schema({ timestamps: true })
 export class Job {
-
   @Prop()
   name: string;
 
@@ -19,7 +18,7 @@ export class Job {
 
   @Prop()
   salary: string;
-  
+
   @Prop()
   quantity: number;
 
@@ -39,26 +38,27 @@ export class Job {
   @Prop({ default: new Date(new Date().setDate(new Date().getDate() + 30)) })
   endDate: Date;
 
-  @Prop({ type: Object})
+  @Prop({ type: Object })
   company: {
     _id: mongoose.Schema.Types.ObjectId;
     name: string;
+    logo: string;
   };
 
-  @Prop({ type: Object})
-  createdBy : {
+  @Prop({ type: Object })
+  createdBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
 
-  @Prop({ type: Object})
-  updatedBy : {
+  @Prop({ type: Object })
+  updatedBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
 
-  @Prop({ type: Object})
-  deletedBy : {
+  @Prop({ type: Object })
+  deletedBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };

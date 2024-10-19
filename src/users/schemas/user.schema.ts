@@ -19,38 +19,38 @@ export class User {
   @Prop()
   age: number;
 
-  @Prop({ default: "unknown"})
+  @Prop({ default: 'unknown' })
   gender: string;
 
   @Prop()
   phone: string;
-  
+
   @Prop()
   address: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name})
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Role.name })
   role: mongoose.Schema.Types.ObjectId;
 
-  @Prop({ type: Object})
+  @Prop({ type: Object })
   company: {
     _id: mongoose.Schema.Types.ObjectId;
     name: string;
   };
 
-  @Prop({ type: Object})
-  createdBy : {
+  @Prop({ type: Object })
+  createdBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
 
-  @Prop({ type: Object})
-  updatedBy : {
+  @Prop({ type: Object })
+  updatedBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
 
-  @Prop({ type: Object})
-  deletedBy : {
+  @Prop({ type: Object })
+  deletedBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };

@@ -1,12 +1,14 @@
-import { Injectable, CanActivate, ExecutionContext, BadRequestException } from '@nestjs/common';// Import the service
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  BadRequestException,
+} from '@nestjs/common'; // Import the service
 import mongoose from 'mongoose';
 
 @Injectable()
 export class checkValidId implements CanActivate {
-
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<any> {
+  async canActivate(context: ExecutionContext): Promise<any> {
     const request = context.switchToHttp().getRequest();
     const id = request.params.id;
 

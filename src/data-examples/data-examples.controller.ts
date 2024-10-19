@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DataExamplesService } from './data-examples.service';
 import { CreateDataExampleDto } from './dto/create-data-example.dto';
 import { UpdateDataExampleDto } from './dto/update-data-example.dto';
@@ -14,7 +22,7 @@ export class DataExamplesController {
   @Post()
   create(
     @Body() createDataExampleDto: CreateDataExampleDto,
-    @User() user: IUser
+    @User() user: IUser,
   ) {
     return this.dataExamplesService.create(createDataExampleDto, user);
   }
@@ -30,7 +38,10 @@ export class DataExamplesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDataExampleDto: UpdateDataExampleDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDataExampleDto: UpdateDataExampleDto,
+  ) {
     return this.dataExamplesService.update(+id, updateDataExampleDto);
   }
 

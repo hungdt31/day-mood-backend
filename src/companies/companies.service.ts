@@ -10,25 +10,35 @@ import { PaginateInfo } from 'src/interface/paginate.interface';
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectModel(Company.name) private companyModel: SoftDeleteModel<CompanyDocument>
+    @InjectModel(Company.name)
+    private companyModel: SoftDeleteModel<CompanyDocument>,
   ) {}
   async create(createCompanyDto: CreateCompanyDto, user: IUser) {
     return await this.companyModel.create({
-      ... createCompanyDto,
+      ...createCompanyDto,
       createdBy: {
         _id: user._id,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   }
 
   async findAll(info: PaginateInfo) {
-    const { offset, defaultLimit, sort, projection, population, filter, currentPage } = info;
+    const {
+      offset,
+      defaultLimit,
+      sort,
+      projection,
+      population,
+      filter,
+      currentPage,
+    } = info;
 
     const totalItems = (await this.companyModel.find(filter)).length;
     const totalPages = Math.ceil(+totalItems / defaultLimit);
 
-    return await this.companyModel.find(filter)
+    return await this.companyModel
+      .find(filter)
       // @ts-ignore: Unreachable code error
       .sort(sort)
       .skip(offset)
@@ -43,10 +53,10 @@ export class CompaniesService {
             itemCount: data.length,
             itemsPerPage: defaultLimit,
             totalPages,
-            currentPage
+            currentPage,
           },
-          result: data
-        }
+          result: data,
+        };
       });
   }
 
@@ -55,23 +65,29 @@ export class CompaniesService {
   }
 
   async update(id: string, updateCompanyDto: UpdateCompanyDto, user: IUser) {
-    return await this.companyModel.updateOne({_id: id}, {
-      ...updateCompanyDto,
-      updatedBy: {
-        _id: user._id,
-        email: user.email
+    return await this.companyModel.updateOne(
+      { _id: id },
+      {
+        ...updateCompanyDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+        updatedAt: new Date(),
       },
-      updatedAt: new Date()
-    })
+    );
   }
 
   async remove(id: string, user: IUser) {
-    await this.companyModel.updateOne({_id: id}, {
-      deletedBy: {
-        _id: user._id,
-        email: user.email
-      }
-    });
-    return await this.companyModel.softDelete({_id: id});
+    await this.companyModel.updateOne(
+      { _id: id },
+      {
+        deletedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return await this.companyModel.softDelete({ _id: id });
   }
 }

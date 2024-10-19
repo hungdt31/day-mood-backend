@@ -1,13 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards
+} from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ExistRole } from './roles.guard';
 import { IUser } from 'src/interface/users.interface';
-import { GetPaginateInfo, ResponseMessage, User } from 'src/decorator/customize';
+import {
+  GetPaginateInfo,
+  ResponseMessage,
+  User,
+} from 'src/decorator/customize';
 import { checkValidId } from 'src/core/id.guard';
 import { PaginateInfo } from 'src/interface/paginate.interface';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('roles')
 @Controller({ path: 'roles', version: '1' })
@@ -16,44 +29,41 @@ export class RolesController {
 
   @Post()
   @UseGuards(ExistRole)
-  @ResponseMessage("Create a role")
-  create(@Body() createRoleDto: CreateRoleDto, @User() user : IUser) {
+  @ResponseMessage('Create a role')
+  create(@Body() createRoleDto: CreateRoleDto, @User() user: IUser) {
     return this.rolesService.create(createRoleDto, user);
   }
 
   @Get()
-  @ResponseMessage("Get a list of roles")
-  findAll(
-    @GetPaginateInfo() info : PaginateInfo
-  ) {
+  @ApiQuery({ name: 'page' })
+  @ApiQuery({ name: 'limit' })
+  @ResponseMessage('Get a list of roles')
+  findAll(@GetPaginateInfo() info: PaginateInfo) {
     return this.rolesService.findAll(info);
   }
 
   @Get(':id')
   @UseGuards(checkValidId)
-  @ResponseMessage("Get a role")
+  @ResponseMessage('Get a role')
   findOne(@Param('id') id: string) {
     return this.rolesService.findOne(id);
   }
 
   @Patch(':id')
   @UseGuards(checkValidId)
-  @ResponseMessage("Update a role")
+  @ResponseMessage('Update a role')
   update(
-    @Param('id') id: string, 
+    @Param('id') id: string,
     @Body() updateRoleDto: UpdateRoleDto,
-    @User() user: IUser
+    @User() user: IUser,
   ) {
     return this.rolesService.update(id, updateRoleDto, user);
   }
 
   @Delete(':id')
   @UseGuards(checkValidId)
-  @ResponseMessage("Delete a role")
-  remove(
-    @Param('id') id: string,
-    @User() user: IUser
-  ) {
+  @ResponseMessage('Delete a role')
+  remove(@Param('id') id: string, @User() user: IUser) {
     return this.rolesService.remove(id, user);
   }
 }

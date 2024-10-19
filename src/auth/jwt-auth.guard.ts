@@ -27,24 +27,34 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err : any, user : any, info: any, context: ExecutionContext) {
-    if (user.email === "admin@gmail.com") return user;
-    const request : Request = context.switchToHttp().getRequest();
+  handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
+    if (user.email === 'admin@gmail.com') return user;
+    const request: Request = context.switchToHttp().getRequest();
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
-      throw err || new UnauthorizedException("Your token is invalid or header is missing token");
+      throw (
+        err ||
+        new UnauthorizedException(
+          'Your token is invalid or header is missing token',
+        )
+      );
     }
     // check permissions
     const targetMethod = request.method;
     const targetEndPoint = request.route?.path;
-    console.log(targetMethod + " " + targetEndPoint);
+    console.log(targetMethod + ' ' + targetEndPoint);
 
-    const permissions : Array<any> = user?.permissions ?? [];
+    const permissions: Array<any> = user?.permissions ?? [];
     const isExist = permissions?.find((permission) => {
-      return permission.method === targetMethod && permission.apiPath === targetEndPoint;
+      return (
+        permission.method === targetMethod &&
+        permission.apiPath === targetEndPoint
+      );
     });
     if (!isExist) {
-      throw new ForbiddenException("You don't have permission to access this endpoint");
+      throw new ForbiddenException(
+        "You don't have permission to access this endpoint",
+      );
     }
     return user;
   }

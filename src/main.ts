@@ -10,16 +10,14 @@ import cookieParser from 'cookie-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // config service for env
   const configService = app.get(ConfigService);
 
   // config validation pipe
   app.useGlobalPipes(new ValidationPipe());
-  
+
   // truyền metadata vào lobal guard
   const reflector = app.get('Reflector');
   app.useGlobalGuards(new JwtAuthGuard(reflector));
@@ -40,7 +38,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: ['1','2']
+    defaultVersion: ['1', '2'],
   });
   app.useStaticAssets(join(__dirname, '..', 'public')); // js, css, img, ...
   app.setBaseViewsDir(join(__dirname, '..', 'views')); // views
@@ -63,7 +61,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(':version/swagger', app, document, {
-    patchDocumentOnRequest: (req , _res, document) => {
+    patchDocumentOnRequest: (req, _res, document) => {
       const version = (req as any).params.version;
       // set version for builder
       config.info.version = version;
@@ -83,12 +81,16 @@ async function bootstrap() {
     },
     swaggerOptions: {
       persistAuthorization: true,
-    }
+    },
   });
 
   // start server at port ${PORT}
   await app.listen(configService.get<string>('PORT'), () => {
-    console.log(`Server is running at http://localhost:${configService.get<string>('PORT')}`);
+    console.log(
+      `Server is running at http://localhost:${configService.get<string>(
+        'PORT',
+      )}`,
+    );
   });
 }
 bootstrap();

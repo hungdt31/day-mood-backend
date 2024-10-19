@@ -5,7 +5,7 @@ import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { softDeletePlugin } from "soft-delete-plugin-mongoose"
+import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { CompaniesModule } from './companies/companies.module';
 import { DataExamplesModule } from './data-examples/data-examples.module';
 import { PermissionsModule } from './permissions/permissions.module';
@@ -19,10 +19,10 @@ import { FilesModule } from './files/files.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URL'),
-        connectionFactory: (connection : any) => {
+        connectionFactory: (connection: any) => {
           connection.plugin(softDeletePlugin);
           return connection;
-        }
+        },
       }),
       inject: [ConfigService],
     }),

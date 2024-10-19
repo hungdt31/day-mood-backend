@@ -11,13 +11,11 @@ import { Model } from 'mongoose';
 @Injectable()
 export class DataExamplesService {
   constructor(
-    @InjectModel(Company.name) private readonly companyModel: SoftDeleteModel<CompanyDocument>,
-    @InjectModel(Company.name) private readonly _companyModel: Model<Company>
+    @InjectModel(Company.name)
+    private readonly companyModel: SoftDeleteModel<CompanyDocument>,
+    @InjectModel(Company.name) private readonly _companyModel: Model<Company>,
   ) {}
-  async create(
-    createDataExampleDto: CreateDataExampleDto,
-    user: IUser
-  ) {
+  async create(createDataExampleDto: CreateDataExampleDto, user: IUser) {
     fs.readFile('./data/companies.json', 'utf8', async (err, data) => {
       if (err) {
         console.error(err);
@@ -27,11 +25,11 @@ export class DataExamplesService {
       const records = await JSON.parse(data);
       for (let i = 0; i < records.length; i++) {
         await this.companyModel.create({
-          ... records[i],
+          ...records[i],
           createdBy: {
             _id: user._id,
-            email: user.email
-          }
+            email: user.email,
+          },
         });
       }
     });

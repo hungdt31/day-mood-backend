@@ -1,7 +1,17 @@
-import { IsArray, IsNotEmpty, IsObject, IsNotEmptyObject, ValidateNested, IsDate, IsOptional, IsDateString, IsString } from "class-validator";
-import { Type } from "class-transformer";
-import { Company } from "src/companies/schemas/company.schema";
-import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsObject,
+  IsNotEmptyObject,
+  ValidateNested,
+  IsDate,
+  IsOptional,
+  IsDateString,
+  IsString,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { Company } from 'src/companies/schemas/company.schema';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateJobDto {
   @ApiProperty()
@@ -42,7 +52,7 @@ export class CreateJobDto {
   @IsDateString()
   @IsOptional()
   startDate: Date;
-  
+
   @ApiProperty()
   @IsDateString()
   @IsOptional()

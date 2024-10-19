@@ -11,7 +11,7 @@ import { PaginateInfo } from 'src/interface/paginate.interface';
 export class JobsService {
   constructor(
     @InjectModel(Job.name)
-    private readonly jobModel: SoftDeleteModel<JobDocument>
+    private readonly jobModel: SoftDeleteModel<JobDocument>,
   ) {}
   async create(createJobDto: CreateJobDto, user: IUser) {
     const { startDate, endDate } = createJobDto;
@@ -23,22 +23,31 @@ export class JobsService {
       ...createJobDto,
       createdBy: {
         _id: user._id,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
     return {
       _id: job._id,
       createdAt: job.createdAt,
-    }
+    };
   }
 
   async findAll(paginateInfo: PaginateInfo) {
-    const { offset, defaultLimit, sort, projection, population, filter, currentPage } = paginateInfo;
+    const {
+      offset,
+      defaultLimit,
+      sort,
+      projection,
+      population,
+      filter,
+      currentPage,
+    } = paginateInfo;
     const totalItems = (await this.jobModel.find(filter)).length;
     const totalPages = Math.ceil(+totalItems / defaultLimit);
-    
-    return await this.jobModel.find(filter)
-    // @ts-ignore: Unreachable code error
+
+    return await this.jobModel
+      .find(filter)
+      // @ts-ignore: Unreachable code error
       .sort(sort)
       .skip(offset)
       .limit(defaultLimit)
@@ -52,10 +61,10 @@ export class JobsService {
             jobCount: data.length,
             jobsPerPage: defaultLimit,
             totalPages,
-            currentPage
+            currentPage,
           },
-          result: data
-        }
+          result: data,
+        };
       });
   }
 
@@ -70,9 +79,9 @@ export class JobsService {
         ...updateJobDto,
         updatedBy: {
           _id: user._id,
-          email: user.email
-        }
-      }
+          email: user.email,
+        },
+      },
     );
   }
 
@@ -82,10 +91,10 @@ export class JobsService {
       {
         deletedBy: {
           _id: user._id,
-          email: user.email
-        }
-      }
+          email: user.email,
+        },
+      },
     );
-    return await this.jobModel.softDelete({ _id: id});
+    return await this.jobModel.softDelete({ _id: id });
   }
 }

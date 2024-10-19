@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsMongoId, IsNotEmpty } from "class-validator";
-import mongoose from "mongoose";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsMongoId, IsNotEmpty } from 'class-validator';
+import mongoose from 'mongoose';
 
 export class CreateRoleDto {
   @ApiProperty()
@@ -21,7 +21,7 @@ export class CreateRoleDto {
       format: 'uuid',
     },
     description: 'Array of permissions id',
-    example: ['60e4c4d9f2d7f1e7c8b1f5c1', '60e4c4d9f2d7f1e7c8b1f5c2']
+    example: ['60e4c4d9f2d7f1e7c8b1f5c1', '60e4c4d9f2d7f1e7c8b1f5c2'],
   })
   @IsNotEmpty()
   @IsMongoId({ each: true })

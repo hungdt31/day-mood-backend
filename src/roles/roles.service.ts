@@ -13,13 +13,13 @@ export class RolesService {
     @InjectModel(Role.name) private roleModel: SoftDeleteModel<RoleDocument>,
   ) {}
 
-  async create(createRoleDto: CreateRoleDto, user : IUser) {
+  async create(createRoleDto: CreateRoleDto, user: IUser) {
     return await this.roleModel.create({
-      ... createRoleDto,
+      ...createRoleDto,
       createdBy: {
         _id: user._id,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   }
 
@@ -27,13 +27,22 @@ export class RolesService {
     return await this.roleModel.findOne({ name });
   }
 
-  async findAll(info : PaginateInfo) {
-    const { offset, defaultLimit, sort, projection, population, filter, currentPage } = info;
+  async findAll(info: PaginateInfo) {
+    const {
+      offset,
+      defaultLimit,
+      sort,
+      projection,
+      population,
+      filter,
+      currentPage,
+    } = info;
     const totalItems = (await this.roleModel.find(filter)).length;
     const totalPages = Math.ceil(+totalItems / defaultLimit);
-    
-    return await this.roleModel.find(filter)
-    // @ts-ignore: Unreachable code error
+
+    return await this.roleModel
+      .find(filter)
+      // @ts-ignore: Unreachable code error
       .sort(sort)
       .skip(offset)
       .limit(defaultLimit)
@@ -47,29 +56,33 @@ export class RolesService {
             roleCount: data.length,
             rolesPerPage: defaultLimit,
             totalPages,
-            currentPage
+            currentPage,
           },
-          result: data
-        }
+          result: data,
+        };
       });
   }
 
   async findOne(id: string) {
     // use populate to get all permissions of this role
-    return await this.roleModel.findById(id)
-      .populate({ path: "permissions", select: 'apiPath method name module' });
+    return await this.roleModel
+      .findById(id)
+      .populate({ path: 'permissions', select: 'apiPath method name module' });
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto, user: IUser) {
-    return this.roleModel.updateOne({
-      _id: id
-    }, {
-      ... updateRoleDto,
-      updatedBy: {
-        _id: user._id,
-        email: user.email
-      }
-    })
+    return this.roleModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        ...updateRoleDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
   }
 
   async remove(id: string, user: IUser) {
@@ -77,16 +90,19 @@ export class RolesService {
     if (foundRole.name === 'ADMIN') {
       throw new BadRequestException("Can't remove admin role");
     }
-    await this.roleModel.updateOne({
-      _id: id
-    }, {
-      deletedBy: {
-        _id: user._id,
-        email: user.email
-      }
-    })
+    await this.roleModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        deletedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
     return await this.roleModel.softDelete({
-      _id: id
-    })
+      _id: id,
+    });
   }
 }

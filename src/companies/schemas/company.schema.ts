@@ -14,21 +14,24 @@ export class Company {
 
   @Prop()
   description: string;
-  
-  @Prop({ type: Object})
-  createdBy : {
+
+  @Prop()
+  logo: string;
+
+  @Prop({ type: Object })
+  createdBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
 
-  @Prop({ type: Object})
-  updatedBy : {
+  @Prop({ type: Object })
+  updatedBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };
 
-  @Prop({ type: Object})
-  deletedBy : {
+  @Prop({ type: Object })
+  deletedBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;
   };

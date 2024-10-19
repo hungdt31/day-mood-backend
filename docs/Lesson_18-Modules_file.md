@@ -21,7 +21,15 @@ NestJS đã hỗ trợ sẵn multer, chỉ cần cài đặt pakage trên để 
 
 File upload thực chất là một middleware: Req $\Rightarrow$ middleware $\Rightarrow$ Res
 
-Khi đưa file lên: **Request $\Rightarrow$ Interceptor (đồng thời set up destination, storage, ...)$\Rightarrow$ Pipe(validate) $\Rightarrow$ Response**. Vì vậy khi upload invalid file vẫn có thể lưu lại trên hệ thống.
+Khi đưa file lên: **Request $\Rightarrow$ Interceptor (đồng thời set up destination, storage, ...  ) $\Rightarrow$ Pipe(validate) $\Rightarrow$ Response**. Vì vậy khi upload invalid file vẫn có thể lưu lại trên hệ thống.
+
+```ts
+@Post('upload')
+@UseInterceptors(FileIntercepter('file')) // ten file su dung trong form-data
+uploadFile(@UploadedFile() file: Express.Multer.File){
+  console.log(file)
+}
+```
 
 ## 4. Update Company with Image
 

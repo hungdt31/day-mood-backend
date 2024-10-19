@@ -9,11 +9,11 @@ import { Company, CompanySchema } from 'src/companies/schemas/company.schema';
     MongooseModule.forFeature([
       {
         name: Company.name,
-        schema: CompanySchema
+        schema: CompanySchema,
       },
     ]),
   ],
   controllers: [DataExamplesController],
-  providers: [DataExamplesService]
+  providers: [DataExamplesService],
 })
 export class DataExamplesModule {}

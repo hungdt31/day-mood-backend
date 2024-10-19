@@ -1,15 +1,18 @@
-import { Injectable, CanActivate, ExecutionContext, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  BadRequestException,
+} from '@nestjs/common';
 import { RolesService } from './roles.service'; // Import the service
 
 @Injectable()
 export class ExistRole implements CanActivate {
   constructor(private readonly rolesService: RolesService) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<any> {
+  async canActivate(context: ExecutionContext): Promise<any> {
     const request = context.switchToHttp().getRequest();
-    const name = request.body.name
+    const name = request.body.name;
 
     // Check if the role is unique
     const role = await this.rolesService.findRoleByName(name);
