@@ -1,21 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
-import { FilesService } from 'src/files/files.service';
 import { IUser } from 'src/interface/users.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { HistoryStatus, Resume, ResumeDocument } from './schemas/resume.entity';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { PaginateInfo } from 'src/interface/paginate.interface';
 
 @Injectable()
 export class ResumesService {
   constructor(
-    // private filesService: FilesService,
     @InjectModel(Resume.name)
-    private readonly ResumeModel: SoftDeleteModel<ResumeDocument>,
+    private readonly resumeModel: SoftDeleteModel<ResumeDocument>,
   ) {}
   async create(createResumeDto: CreateResumeDto, user: IUser) {
-    return await this.ResumeModel.create({
+    return await this.resumeModel.create({
       ... createResumeDto,
       createdBy: {
         _id: user._id,
@@ -32,26 +31,49 @@ export class ResumesService {
     });
   }
 
-  async findAll(jobId: string, userId: string) {
-    const query: any = {};
+  async findAll(paginateInfo: PaginateInfo) {
+    const {
+      offset,
+      defaultLimit,
+      sort,
+      projection,
+      population,
+      filter,
+      currentPage,
+    } = paginateInfo
 
-    if (jobId != "" && jobId != null) {
-      query.jobId = jobId;
-    }
+    const totalItems = (await this.resumeModel.find(filter)).length;
+    const totalPages = Math.ceil(+totalItems / defaultLimit);
 
-    if (userId != "" && userId != null) {
-      query.userId = userId;
-    }
-    
-    return await this.ResumeModel.find(query);
+    return await this.resumeModel
+      .find(filter)
+      // @ts-ignore: Unreachable code error
+      .sort(sort)
+      .skip(offset)
+      .limit(defaultLimit)
+      .select(projection)
+      .populate(population)
+      .exec()
+      .then((data) => {
+        return {
+          meta: {
+            totalResumes: +totalItems,
+            resumeCount: data.length,
+            resumesPerPage: defaultLimit,
+            totalPages,
+            currentPage,
+          },
+          result: data,
+        };
+      });
   }
 
   async findOne(id: string) {
-    return await this.ResumeModel.findById(id);
+    return await this.resumeModel.findById(id);
   }
 
   async update(id: string, updateResumeDto: UpdateResumeDto, user: IUser) {
-    const resume = await this.ResumeModel.findById(id);
+    const resume = await this.resumeModel.findById(id);
     if (resume.userId.toString() == user._id && updateResumeDto.status) {
       throw new BadRequestException('Owner can not change status of Cv!');
     }
@@ -64,7 +86,7 @@ export class ResumesService {
           name: user.name
         }
       })
-      const updatedResume = await this.ResumeModel.updateOne({
+      const updatedResume = await this.resumeModel.updateOne({
         _id: id
       }, {
         history: resume.history
@@ -72,7 +94,7 @@ export class ResumesService {
       return updatedResume;
     }
     if (updateResumeDto.status) delete updateResumeDto.status
-    return await this.ResumeModel.updateOne({
+    return await this.resumeModel.updateOne({
       _id: id
     }, { 
       history: {
@@ -90,7 +112,7 @@ export class ResumesService {
   }
 
   async remove(id: string) {
-    return await this.ResumeModel.softDelete({
+    return await this.resumeModel.softDelete({
       _id: id
     });
   }

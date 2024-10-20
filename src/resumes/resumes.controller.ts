@@ -1,16 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ResumesService } from './resumes.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { ResponseMessage } from 'src/decorator/customize';
 import { IUser } from 'src/interface/users.interface';
-import { User } from 'src/decorator/customize';
+import { User, GetPaginateInfo } from 'src/decorator/customize';
 import { checkValidId } from 'src/core/id.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginateInfo } from 'src/interface/paginate.interface';
 
-@ApiTags('files')
-@Controller({ path: 'files', version: '1' })
-@Controller('resumes')
+@ApiTags('resumes')
+@Controller({ path: 'resumes', version: '1' })
 export class ResumesController {
   constructor(private readonly resumesService: ResumesService) {}
 
@@ -26,10 +26,9 @@ export class ResumesController {
   @Get()
   @ResponseMessage('Get resumes successfully!')
   findAll(
-    @Query('jobId') jobId: string,
-    @Query('userId') userId: string
+    @GetPaginateInfo() paginateInfo: PaginateInfo
   ) {
-    return this.resumesService.findAll(jobId, userId);
+    return this.resumesService.findAll(paginateInfo);
   }
 
   @Patch(':id')

@@ -14,7 +14,9 @@ export class JobsService {
     private readonly jobModel: SoftDeleteModel<JobDocument>,
   ) {}
   async create(createJobDto: CreateJobDto, user: IUser) {
-    const { startDate, endDate } = createJobDto;
+    let { startDate, endDate } = createJobDto;
+    if (!startDate) startDate = new Date();
+    if (!endDate) endDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
     const isStartDateBeforeEndDate = startDate.getTime() < endDate.getTime();
     if (!isStartDateBeforeEndDate) {
       throw new BadRequestException('Start date must be before end date');

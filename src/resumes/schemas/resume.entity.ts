@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { User } from 'src/users/schemas/user.schema';
 import { Job } from 'src/jobs/schemas/job.schema';
 
 // ở SQL document = table
@@ -12,7 +13,7 @@ export enum HistoryStatus {
   REJECTED = 'REJECTED',
 }
 
-class User {
+class UserInterface {
   _id: string;
   name: string;
 }
@@ -54,7 +55,7 @@ export class Resume {
   history: {
     status: HistoryStatus;
     updatedAt: Date;
-    updatedBy: User;
+    updatedBy: UserInterface;
   }[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })

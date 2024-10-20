@@ -2,8 +2,10 @@ import {
   createParamDecorator,
   SetMetadata,
   ExecutionContext,
+  BadRequestException,
 } from '@nestjs/common';
 import aqp from 'api-query-params';
+import mongoose from 'mongoose';
 
 // truyền thêm metadata vào lời gọi hàm
 export const IS_PUBLIC_KEY = 'isPublic';
@@ -26,7 +28,11 @@ export const GetPaginateInfo = createParamDecorator(
     const { filter, sort, projection, population } = aqp(queryString);
     delete filter.page;
     delete filter.limit;
-
+    Object.keys(filter).forEach((field: string) => {
+      if (filter[field] && !mongoose.Types.ObjectId.isValid(filter[field])) {
+        throw new BadRequestException(`Invalid ObjectId for field ${field}`);
+      }
+    });
     const defaultLimit = +limit || 10;
     const offset = (currentPage - 1) * defaultLimit;
 
