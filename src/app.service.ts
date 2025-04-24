@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHelloVersion1(): string {
-    return 'Tự học Nestjs từ zero đến hero';
+    return 'This is version 1 of the API.';
   }
 
   getHelloVersion2(): string {

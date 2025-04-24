@@ -1,4 +1,10 @@
-import { Controller, Get, Render, Version } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Render,
+  Version,
+  VERSION_NEUTRAL,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { ConfigService } from '@nestjs/config';
 import { Public } from './decorator/customize';
@@ -12,10 +18,25 @@ export class AppController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Public()
+  @Version(VERSION_NEUTRAL)
+  @Get() //  => api (restful)
+  @Render('api')
+  root() {
+    return {
+      title: 'Day Mood API',
+      message: 'Welcome to the Day Mood API',
+      apiDocs: [
+        { version: '1', url: '/api/v1' },
+        { version: '2', url: '/api/v2' },
+      ],
+    };
+  }
+
   @Version('1') // => api/v1
   @Public()
   @Get() //  => api (restful)
-  @Render('home') // => view (html, ejs, ...)
+  @Render('apiv1') // => view (html, ejs, ...)
   handleHomePage() {
     // port from .env
     console.log('>> check port = ', this.configService.get<string>('PORT'));
@@ -28,7 +49,7 @@ export class AppController {
   @Version('2') // => api/v2
   @Public()
   @Get() //  => api (restful)
-  @Render('home') // => view (html, ejs, ...)
+  @Render('apiv2') // => view (html, ejs, ...)
   handleHomePage2() {
     // port from .env
     console.log('>> check port = ', this.configService.get<string>('PORT'));
