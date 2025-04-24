@@ -9,7 +9,7 @@ import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { FilesModule } from './files/files.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
