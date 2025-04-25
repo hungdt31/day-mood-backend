@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { PermissionsModule } from './permissions/permissions.module';
+import { RecordsModule } from './records/records.module';
 import { RolesModule } from './roles/roles.module';
 import { FilesModule } from './files/files.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -32,6 +33,7 @@ import { PrismaModule } from './prisma/prisma.module';
     PermissionsModule,
     RolesModule,
     FilesModule,
+    RecordsModule
     // PrismaModule,
   ],
   controllers: [AppController],

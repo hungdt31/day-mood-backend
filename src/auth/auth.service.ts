@@ -17,32 +17,32 @@ export class AuthService {
 
   // username and password are passed from the login method
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneByEmail(username);
-    if (user) {
-      const isValid = this.usersService.isValidPasword(pass, user.password);
-      if (isValid) {
-        if (user.role) {
-          const userRole = user.role as unknown as { _id: string; name: string };
+    // const user = await this.usersService.findOneByEmail(username);
+    // if (user) {
+    //   const isValid = this.usersService.isValidPasword(pass, user.password);
+    //   if (isValid) {
+    //     if (user.role) {
+    //       const userRole = user.role as unknown as { _id: string; name: string };
 
-          return {
-            _id: user._id,
-            email: user.email,
-            name: user.name,
-            role: {
-              _id: userRole._id,
-              name: userRole.name,
-            },
-          };
-        }
-        else {
-          return {
-            _id: user._id,
-            email: user.email,
-            name: user.name
-          }
-        }
-      }
-    }
+    //       return {
+    //         _id: user._id,
+    //         email: user.email,
+    //         name: user.name,
+    //         role: {
+    //           _id: userRole._id,
+    //           name: userRole.name,
+    //         },
+    //       };
+    //     }
+    //     else {
+    //       return {
+    //         _id: user._id,
+    //         email: user.email,
+    //         name: user.name
+    //       }
+    //     }
+    //   }
+    // }
     return null;
   }
 

@@ -8,21 +8,23 @@ datasource db {
 }
 
 model User {
-  id       BigInt   @id @default(autoincrement())
-  email    String   @unique
-  username String
-  password String
-  phone    String?
-  gender   String?
-  age      Int?
-  avatar   File?    @relation("UserAvatar")
-  records  Record[]
+  id           Int   @id @default(autoincrement())
+  email        String   @unique
+  username     String
+  password     String
+  phone        String?
+  gender       String?
+  age          Int?
+  created_time DateTime @default(now())
+  updated_time DateTime
+  avatar       File?    @relation("UserAvatar")
+  records      Record[]
 
   @@map("users")
 }
 
 model Mood {
-  id           BigInt   @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   name         String
   created_time DateTime @default(now())
   updated_time DateTime @updatedAt
@@ -32,47 +34,57 @@ model Mood {
 }
 
 model Activity {
-  id           BigInt   @id @default(autoincrement())
-  name         String
-  created_time DateTime @default(now())
-  updated_time DateTime @updatedAt
-  records      Record   @relation(fields: [id], references: [id], onDelete: Cascade, map: "activities_record_id_fkey")
+  id               Int             @id @default(autoincrement())
+  name             String
+  created_time     DateTime           @default(now())
+  updated_time     DateTime           @updatedAt
+  activity_records activity_records[]
 
   @@map("activities")
 }
 
 model Record {
-  id           BigInt       @id @default(autoincrement())
-  content      String
-  created_time DateTime     @default(now())
-  updated_time DateTime     @updatedAt
-  mood_id      BigInt?
-  user_id      BigInt
-  status       RecordStatus @default(ACTIVE)
-  title        String
-  activities   Activity?
-  files        File[]
-  mood         Mood?        @relation(fields: [mood_id], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id               Int             @id @default(autoincrement())
+  title            String
+  content          String
+  status           RecordStatus       @default(ACTIVE)
+  created_time     DateTime           @default(now())
+  updated_time     DateTime           @updatedAt
+  mood_id          Int?
+  user_id          Int
+  activity_records activity_records[]
+  files            File[]
+  mood             Mood?              @relation(fields: [mood_id], references: [id], onDelete: Cascade)
+  user             User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("records")
 }
 
 model File {
-  id           BigInt   @id @default(autoincrement())
+  id           Int   @id @default(autoincrement())
   fname        String
   type         String
   url          String
   fkey         String
   size         Decimal
-  record_id    BigInt?
-  user_id      BigInt?  @unique
+  record_id    Int?
+  user_id      Int?  @unique
   created_time DateTime @default(now())
   updated_time DateTime @updatedAt
   record       Record?  @relation(fields: [record_id], references: [id])
   user         User?    @relation("UserAvatar", fields: [user_id], references: [id])
 
   @@map("files")
+}
+
+model activity_records {
+  activity_id  Int
+  record_id    Int
+  created_time DateTime @default(now())
+  activities   Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+  records      Record   @relation(fields: [record_id], references: [id], onDelete: Cascade)
+
+  @@id([activity_id, record_id])
 }
 
 enum RecordStatus {

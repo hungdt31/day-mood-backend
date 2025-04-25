@@ -28,35 +28,35 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
-    if (user?.email === 'admin@gmail.com' || user?.email === 'admin2@gmail.com') return user;
-    const request: Request = context.switchToHttp().getRequest();
-    // You can throw an exception based on either "info" or "err" arguments
-    if (err || !user) {
-      throw (
-        err ||
-        new UnauthorizedException(
-          'Your token is invalid or header is missing token',
-        )
-      );
-    }
-    // check permissions
-    const targetMethod = request.method;
-    const targetEndPoint = request.route?.path as string;
-    console.log(targetMethod + ' ' + targetEndPoint);
+    // if (user?.email === 'admin@gmail.com' || user?.email === 'admin2@gmail.com') return user;
+    // const request: Request = context.switchToHttp().getRequest();
+    // // You can throw an exception based on either "info" or "err" arguments
+    // if (err || !user) {
+    //   throw (
+    //     err ||
+    //     new UnauthorizedException(
+    //       'Your token is invalid or header is missing token',
+    //     )
+    //   );
+    // }
+    // // check permissions
+    // const targetMethod = request.method;
+    // const targetEndPoint = request.route?.path as string;
+    // console.log(targetMethod + ' ' + targetEndPoint);
 
-    const permissions: Array<any> = user?.permissions ?? [];
-    let isExist = permissions?.find((permission) => {
-      return (
-        permission.method === targetMethod &&
-        permission.apiPath === targetEndPoint
-      );
-    });
-    if (targetEndPoint.startsWith('/api/v1/auth')) isExist = true;
-    if (!isExist) {
-      throw new ForbiddenException(
-        "You don't have permission to access this endpoint",
-      );
-    }
+    // const permissions: Array<any> = user?.permissions ?? [];
+    // let isExist = permissions?.find((permission) => {
+    //   return (
+    //     permission.method === targetMethod &&
+    //     permission.apiPath === targetEndPoint
+    //   );
+    // });
+    // if (targetEndPoint.startsWith('/api/v1/auth')) isExist = true;
+    // if (!isExist) {
+    //   throw new ForbiddenException(
+    //     "You don't have permission to access this endpoint",
+    //   );
+    // }
     return user;
   }
 }
