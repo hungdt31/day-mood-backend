@@ -239,4 +239,5 @@ UNLICENSED
 
 <!-- VERSION_BADGE_PLACEHOLDER -->
 [![Version](https://img.shields.io/badge/version-v0.0.3-blue)](https://github.com/hungdt31/day-mood-backend/releases/tag/v0.0.3)
+[![Version](https://img.shields.io/badge/version-v0.0.3-blue)](https://github.com/hungdt31/day-mood-backend/releases/tag/v0.0.3)
 [![Version](https://img.shields.io/badge/version-v0.0.2-blue)](https://github.com/hungdt31/day-mood-backend/releases/tag/v0.0.2)
