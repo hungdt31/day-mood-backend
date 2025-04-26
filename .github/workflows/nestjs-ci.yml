@@ -95,10 +95,10 @@ jobs: # Danh sách các công việc cần thực hiện
         # Chỉ chạy khi build/test thành công và push lên nhánh chính
         if: success() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name == 'push'
         run: |
+          # Pull latest changes with rebase before pushing
+          git pull origin ${{ github.ref_name }} --rebase
+          # Push the commit and the tag
           git push origin HEAD:${{ github.ref_name }} --follow-tags
-          # Hoặc nếu lệnh trên gặp vấn đề quyền:
-          # git push origin HEAD:${{ github.ref_name }}
-          # git push --tags
 
       - name: Extract version # Lấy version mới từ package.json
         # Chỉ chạy khi build/test thành công và push lên nhánh chính
