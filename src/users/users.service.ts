@@ -1,11 +1,7 @@
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from './schemas/user.schema';
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
-import { UserDocument } from './schemas/user.schema';
 import { RegisterDto } from 'src/auth/dto/create-user.dto';
 import { IUser } from '../interface/users.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -15,8 +11,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>,
-    // private prisma: PrismaService,
+    private prisma: PrismaService
   ) {}
 
   getHashedPassword = (password: string) => {
@@ -25,75 +20,108 @@ export class UsersService {
     return hashedPassword;
   };
 
-  async create(createUserDto: CreateUserDto, user: IUser) {
+  async create(createUserDto: CreateUserDto) {
     const hashedMyPassword = this.getHashedPassword(createUserDto.password);
-    delete createUserDto.password;
-    let res = await this.userModel.create({
-      password: hashedMyPassword,
-      ...createUserDto,
-      createdBy: {
-        _id: user._id,
-        email: user.email,
+    // Create a copy and remove password from it
+    const userDataToCreate = { ...createUserDto };
+    delete userDataToCreate.password;
+
+    const res = await this.prisma.user.create({
+      data: {
+        ...userDataToCreate,
+        password: hashedMyPassword,
       },
     });
+
     return {
-      _id: res._id,
-      createdAt: res.createdAt,
+      id: res.id,
+      createdAt: res.username,
     };
   }
 
   async register(registerDto: RegisterDto) {
     const { password } = registerDto;
-    registerDto.password = this.getHashedPassword(password);
-    let user = await this.userModel.create({
-      ...registerDto,
+    // Create a copy to avoid modifying the original object
+    const userDataToCreate = { ...registerDto };
+    userDataToCreate.password = this.getHashedPassword(password);
+
+    const user = await this.prisma.user.create({
+      data: userDataToCreate,
     });
-    delete user.password;
-    return user;
+
+    // Create a new object without the password field
+    const { password: _, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   async findAll(info: PaginateInfo) {
-    const {
-      offset,
-      defaultLimit,
-      sort,
-      projection,
-      population,
-      filter,
-      currentPage,
-    } = info;
+    const { page, where, orderBy, skip, take, select, include } = info;
 
-    const totalItems = (await this.userModel.find(filter)).length;
-    const totalPages = Math.ceil(+totalItems / defaultLimit);
+    // Count total with filters applied
+    const totalItems = await this.prisma.user.count({ where });
+    const totalPages = Math.ceil(totalItems / take);
 
-    return await this.userModel
-      .find(filter)
-      // @ts-ignore: Unreachable code error
-      .sort(sort)
-      .skip(offset)
-      .limit(defaultLimit)
-      .select(projection)
-      .populate(population)
-      .exec()
-      .then((data) => {
-        return {
-          meta: {
-            totalUsers: +totalItems,
-            userCount: data.length,
-            usersPerPage: defaultLimit,
-            totalPages,
-            currentPage,
-          },
-          result: data,
-        };
-      });
+    // Create query options object with only the properties Prisma accepts
+    const queryOptions: any = {
+      where,
+      orderBy,
+      skip,
+      take,
+    };
+
+    // Add either select OR include based on which one is provided
+    // Cannot use both simultaneously in Prisma
+    if (select && Object.keys(select).length > 0) {
+      // Ensure password is excluded from select
+      queryOptions.select = {
+        ...select,
+        password: false,
+      };
+    } else if (include && Object.keys(include).length > 0) {
+      queryOptions.include = {
+        ...include,
+        // Exclude password from include if it exists
+        password: false,
+      };
+    } else {
+      // If neither select nor include provided, explicitly exclude password
+      queryOptions.select = { password: false };
+    }
+
+    // Execute query with correct options
+    // @ts-ignore
+    const users = await this.prisma.user.findWithDeleted(queryOptions);
+
+    return {
+      meta: {
+        totalUsers: totalItems,
+        userCount: users.length,
+        usersPerPage: take,
+        totalPages,
+        currentPage: page,
+      },
+      result: users,
+    };
   }
 
-  async findOne(id: string) {
-    const res = await this.userModel
-      .findOne({ _id: id, isDeleted: false })
-      .select('-password')
-      .populate({ path: 'role', select: 'name permissions' });
+  async findOne(id: number) {
+    const res = await this.prisma.user.findFirst({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        phone: true,
+        gender: true,
+        age: true,
+        created_time: true,
+        updated_time: true,
+        avatar: true,
+        role: true,
+      },
+    });
 
     if (!res) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -102,56 +130,41 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string) {
-    return await this.userModel
-      .findOne({ email })
-      .populate({ path: 'role', select: 'name permissions' });
+    return await this.prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
   }
 
   isValidPasword(password: string, hash: string) {
     return compareSync(password, hash);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, user: IUser) {
-    return this.userModel.updateOne(
-      { _id: id },
-      {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    return await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
         ...updateUserDto,
-        updatedBy: {
-          _id: user._id,
-          email: user.email,
-        }
       },
-    );
+    });
   }
 
-  async remove(id: string, user: IUser) {
-    // update deletedBy with user action
-    const foundUser = await this.userModel.findById(id);
-    if (foundUser && foundUser.email === 'admin@gmail.com') {
-      throw new BadRequestException("You can't delete admin account");
+  async remove(id: number) {
+    // Find the user first to check if it's admin
+    const foundUser = await this.prisma.user.findFirst({
+      where: { id },
+    });
+    if (!foundUser) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    await this.userModel.updateOne(
-      { _id: id },
-      {
-        deletedBy: {
-          _id: user._id,
-          email: user.email,
-        },
+    // @ts-ignore
+    return await this.prisma.user.softDelete({
+      where: {
+        id,
       },
-    );
-    return await this.userModel.softDelete({ _id: id });
-  }
-
-  async updateUserToken(id: string, refreshToken: string) {
-    return await this.userModel.updateOne(
-      { _id: id },
-      {
-        refreshToken: refreshToken,
-      },
-    );
-  }
-
-  async findOneByRefreshToken(refreshToken: string) {
-    return await this.userModel.findOne({ refreshToken });
+    });
   }
 }
