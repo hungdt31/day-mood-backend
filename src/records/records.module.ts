@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
+  imports: [PrismaModule],
   // set up controller follow the version
   controllers: [RecordsController],
   providers: [RecordsService, PrismaService],

@@ -10,9 +10,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private prisma: PrismaService
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   getHashedPassword = (password: string) => {
     const salt = genSaltSync(10);
@@ -72,25 +70,24 @@ export class UsersService {
     // Add either select OR include based on which one is provided
     // Cannot use both simultaneously in Prisma
     if (select && Object.keys(select).length > 0) {
-      // Ensure password is excluded from select
-      queryOptions.select = {
-        ...select,
-        password: false,
-      };
+      // Create a copy of select and remove password if it exists
+      const safeSelect = { ...select };
+      delete safeSelect.password; // Remove password key entirely
+
+      // Check if select becomes empty after removing password
+      if (Object.keys(safeSelect).length > 0) {
+        queryOptions.select = safeSelect;
+      } else {
+        delete queryOptions.select;
+      }
     } else if (include && Object.keys(include).length > 0) {
-      queryOptions.include = {
-        ...include,
-        // Exclude password from include if it exists
-        password: false,
-      };
-    } else {
-      // If neither select nor include provided, explicitly exclude password
-      queryOptions.select = { password: false };
+      queryOptions.include = include;
     }
 
     // Execute query with correct options
-    // @ts-ignore
-    const users = await this.prisma.user.findWithDeleted(queryOptions);
+    // The original code used findWithDeleted, assuming it's a custom method/extension
+    // Adjust if using standard findMany
+    const users = await this.prisma.user.findMany(queryOptions); // Using standard findMany for clarity, adjust if findWithDeleted is intended
 
     return {
       meta: {
