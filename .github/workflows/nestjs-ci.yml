@@ -30,6 +30,9 @@ jobs: # Danh sách các công việc cần thực hiện
       - name: Install Dependencies # Bước 3: Cài đặt các gói phụ thuộc
         run: npm ci # Sử dụng 'npm ci' thay vì 'npm install' trong CI để đảm bảo cài đặt chính xác từ package-lock.json
 
+      - name: Generate Prisma Client # Bước 3.5: Tạo Prisma Client types
+        run: npx prisma generate
+
       # (Tùy chọn) Bước 4: Chạy Linting (nếu bạn có script lint)
       # - name: Run Linter
       #   run: npm run lint # Thay 'lint' bằng tên script lint trong package.json của bạn
