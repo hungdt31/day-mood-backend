@@ -12,7 +12,7 @@ import { RESPONSE_MESSAGE } from 'src/decorator/customize';
 export interface Response<T> {
   statusCode: number;
   message?: string;
-  data: any;
+  data: T;
 }
 
 // it will transform the response to the format we want
@@ -39,13 +39,37 @@ export class TransformInterceptor<T>
       return next.handle(); // Don't transform for static files or views
     }
     return next.handle().pipe(
-      map((data) => ({
-        statusCode: context.switchToHttp().getResponse().statusCode,
-        message:
-          this.reflector.get<string>(RESPONSE_MESSAGE, context.getHandler()) ||
-          '',
-        data: data,
-      })),
+      map((data) => {
+        // Lấy được response message từ request hiện tại
+        const reqMessage =
+          this.reflector.get<string>(RESPONSE_MESSAGE, context.getHandler()) ??
+          '';
+
+        return {
+          statusCode: context.switchToHttp().getResponse().statusCode,
+          message: reqMessage,
+          data: data,
+        };
+      }),
     );
   }
 }
+
+// Common Swagger response schemas for reuse across controllers
+export const ForbiddenResponseSchema = {
+  type: 'object',
+  properties: {
+    statusCode: { type: 'number', example: 403 },
+    message: { type: 'string', example: 'Forbidden resource' },
+    error: { type: 'string', example: 'You do not have permission to access this resource' }
+  }
+};
+
+export const UnauthorizedResponseSchema = {
+  type: 'object',
+  properties: {
+    statusCode: { type: 'number', example: 401 },
+    message: { type: 'string', example: 'Unauthorized' },
+    error: { type: 'string', example: 'Your token is invalid or header is missing token' }
+  }
+};

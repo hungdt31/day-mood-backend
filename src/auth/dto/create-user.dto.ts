@@ -1,54 +1,87 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
-  isNotEmpty,
   IsNotEmpty,
   IsOptional,
   IsInt,
+  IsString,
 } from 'class-validator';
+import { UserRole, UserGender } from '@prisma/client';
 
-enum Role {
-  User = 'user',
-  Admin = 'admin',
-  Hr = 'hr',
-}
-enum Gender {
-  Female = 'female',
-  Male = 'male',
-  Unknown = 'unknown',
-}
 export class RegisterDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: 'anonymous@gmail.com',
+    description: 'User email address',
+    required: true,
+  })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: '123456abc',
+    description: 'User password',
+    required: true,
+  })
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'anonymous',
+    description: 'Unique username',
+    required: true,
+  })
   @IsNotEmpty()
-  name: string;
+  username: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({
+    example: 'Hà Nội',
+    description: 'User address',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
   address: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 25,
+    description: 'User age',
+    required: false,
+    type: 'integer',
+  })
   @IsInt()
-  @Type(() => Number)
+  @IsOptional()
   age: number;
 
-  @ApiProperty()
-  @IsEnum(Role)
+  @ApiProperty({
+    example: '0912345678',
+    description: 'User phone number',
+    required: false,
+  })
   @IsOptional()
-  role: string;
+  @IsString()
+  phone: string;
 
-  @ApiProperty()
-  @IsEnum(Gender)
+  @ApiProperty({
+    enum: UserRole,
+    example: UserRole.USER,
+    description: 'User role',
+    default: UserRole.USER,
+    required: false,
+  })
+  @IsEnum(UserRole)
   @IsOptional()
-  gender: string;
+  role: UserRole;
+
+  @ApiProperty({
+    enum: UserGender,
+    example: UserGender.MALE,
+    description: 'User gender',
+    default: UserGender.MALE,
+    required: false,
+  })
+  @IsEnum(UserGender)
+  @IsOptional()
+  gender: UserGender;
 }

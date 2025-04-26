@@ -12,11 +12,15 @@ model User {
   email        String   @unique
   username     String
   password     String
+  role         UserRole? @default(USER)
+  address      String?
   phone        String?
-  gender       String?
+  gender       UserGender? @default(OTHER)
   age          Int?
+  is_deleted   Boolean   @default(false)
+  deleted_at   DateTime?
   created_time DateTime @default(now())
-  updated_time DateTime
+  updated_time DateTime @updatedAt
   avatar       File?    @relation("UserAvatar")
   records      Record[]
 
@@ -24,7 +28,7 @@ model User {
 }
 
 model Mood {
-  id           Int      @id @default(autoincrement())
+  id           Int   @id @default(autoincrement())
   name         String
   created_time DateTime @default(now())
   updated_time DateTime @updatedAt
@@ -34,30 +38,43 @@ model Mood {
 }
 
 model Activity {
-  id               Int             @id @default(autoincrement())
-  name             String
-  created_time     DateTime           @default(now())
-  updated_time     DateTime           @updatedAt
-  activity_records activity_records[]
+  id           Int   @id @default(autoincrement())
+  name         String
+  created_time DateTime @default(now())
+  updated_time DateTime @updatedAt
+  records      ActivityRecord[]
 
   @@map("activities")
 }
 
 model Record {
-  id               Int             @id @default(autoincrement())
-  title            String
-  content          String
-  status           RecordStatus       @default(ACTIVE)
-  created_time     DateTime           @default(now())
-  updated_time     DateTime           @updatedAt
-  mood_id          Int?
-  user_id          Int
-  activity_records activity_records[]
-  files            File[]
-  mood             Mood?              @relation(fields: [mood_id], references: [id], onDelete: Cascade)
-  user             User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id           Int       @id @default(autoincrement())
+  title        String
+  content      String
+  status       RecordStatus @default(ACTIVE)
+  created_time DateTime     @default(now())
+  updated_time DateTime     @updatedAt
+  mood_id      Int?
+  user_id      Int
+  activities   ActivityRecord[]
+  files         File[]
+  mood         Mood?        @relation(fields: [mood_id], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("records")
+}
+
+// Join table for many-to-many relationship
+model ActivityRecord {
+  activity_id  Int
+  record_id    Int
+  created_time DateTime @default(now())
+  
+  activity     Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+  record       Record   @relation(fields: [record_id], references: [id], onDelete: Cascade)
+
+  @@id([activity_id, record_id])
+  @@map("activity_records")
 }
 
 model File {
@@ -77,18 +94,19 @@ model File {
   @@map("files")
 }
 
-model activity_records {
-  activity_id  Int
-  record_id    Int
-  created_time DateTime @default(now())
-  activities   Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
-  records      Record   @relation(fields: [record_id], references: [id], onDelete: Cascade)
-
-  @@id([activity_id, record_id])
-}
-
 enum RecordStatus {
   ACTIVE
   DRAFT
   DELETED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserGender {
+  MALE
+  FAMALE
+  OTHER
 }

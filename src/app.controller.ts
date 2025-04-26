@@ -8,9 +8,8 @@ import {
 import { AppService } from './app.service';
 import { ConfigService } from '@nestjs/config';
 import { Public } from './decorator/customize';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
-@ApiTags('version')
 @Controller()
 export class AppController {
   constructor(
@@ -37,6 +36,7 @@ export class AppController {
   @Public()
   @Get() //  => api (restful)
   @Render('apiv1') // => view (html, ejs, ...)
+  @ApiExcludeEndpoint()
   handleHomePage() {
     // port from .env
     console.log('>> check port = ', this.configService.get<string>('PORT'));
@@ -50,6 +50,7 @@ export class AppController {
   @Public()
   @Get() //  => api (restful)
   @Render('apiv2') // => view (html, ejs, ...)
+  @ApiExcludeEndpoint()
   handleHomePage2() {
     // port from .env
     console.log('>> check port = ', this.configService.get<string>('PORT'));
