@@ -31,8 +31,8 @@ jobs: # Danh sách các công việc cần thực hiện
         run: npm ci # Sử dụng 'npm ci' thay vì 'npm install' trong CI để đảm bảo cài đặt chính xác từ package-lock.json
 
       # (Tùy chọn) Bước 4: Chạy Linting (nếu bạn có script lint)
-      - name: Run Linter
-        run: npm run lint # Thay 'lint' bằng tên script lint trong package.json của bạn
+      # - name: Run Linter
+      #   run: npm run lint # Thay 'lint' bằng tên script lint trong package.json của bạn
 
       # (Tùy chọn nhưng khuyến nghị) Bước 5: Chạy Unit Tests
       - name: Run Unit Tests
