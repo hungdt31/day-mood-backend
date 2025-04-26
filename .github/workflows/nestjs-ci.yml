@@ -1,0 +1,65 @@
+# .github/workflows/nestjs-ci.yml
+
+name: NestJS CI/CD Pipeline # Tên của workflow hiển thị trên GitHub Actions
+
+on: # Các sự kiện kích hoạt workflow
+  push:
+    branches: ['main', 'master'] # Chạy khi push lên nhánh main hoặc master
+  pull_request:
+    branches: ['main', 'master'] # Chạy khi có pull request tới nhánh main hoặc master
+  workflow_dispatch: # Cho phép chạy thủ công từ giao diện GitHub Actions
+
+jobs: # Danh sách các công việc cần thực hiện
+  build_and_test: # Tên của job (bạn có thể đặt tên khác)
+    runs-on: ubuntu-latest # Môi trường chạy job (sử dụng máy ảo Ubuntu mới nhất)
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Chạy job với nhiều phiên bản Node.js (tùy chọn)
+
+    steps: # Các bước tuần tự trong job
+      - name: Checkout Repository # Bước 1: Lấy mã nguồn từ repository
+        uses: actions/checkout@v4 # Sử dụng action chính thức để checkout code
+
+      - name: Set up Node.js ${{ matrix.node-version }} # Bước 2: Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm' # Tự động cache npm dependencies dựa trên package-lock.json
+
+      - name: Install Dependencies # Bước 3: Cài đặt các gói phụ thuộc
+        run: npm ci # Sử dụng 'npm ci' thay vì 'npm install' trong CI để đảm bảo cài đặt chính xác từ package-lock.json
+
+      # (Tùy chọn) Bước 4: Chạy Linting (nếu bạn có script lint)
+      - name: Run Linter
+        run: npm run lint # Thay 'lint' bằng tên script lint trong package.json của bạn
+
+      # (Tùy chọn nhưng khuyến nghị) Bước 5: Chạy Unit Tests
+      - name: Run Unit Tests
+        run: npm run test # Thay 'test' bằng tên script unit test của bạn
+
+      # (Tùy chọn) Bước 6: Chạy E2E Tests (thường cần cấu hình thêm DB hoặc môi trường)
+      # - name: Run E2E Tests
+      #   run: npm run test:e2e
+
+      # Bước 7: Build ứng dụng
+      - name: Build Application
+        run: npm run build # Thay 'build' bằng tên script build của bạn
+
+
+    # --- Phần Deployment (Ví dụ cơ bản - Cần tùy chỉnh nhiều) ---
+    # Bước 8: Deploy (ví dụ: sử dụng SSH) - Chỉ chạy khi push lên nhánh main
+    # - name: Deploy to Production
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Chỉ deploy khi push lên main
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }} # Lấy từ GitHub Secrets
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     port: ${{ secrets.SSH_PORT || 22 }}
+    #     script: |
+    #       cd /path/to/your/app # Điều hướng đến thư mục ứng dụng trên server
+    #       git pull origin main # Kéo code mới nhất
+    #       npm install --production # Cài đặt chỉ dependencies production
+    #       npm run build # Build lại ứng dụng (nếu cần)
+    #       pm2 restart your-app-name # Khởi động lại ứng dụng bằng PM2 (ví dụ)
