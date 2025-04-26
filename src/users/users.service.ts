@@ -6,7 +6,7 @@ import { RegisterDto } from 'src/auth/dto/create-user.dto';
 import { IUser } from '../interface/users.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { PaginateInfo } from 'src/interface/paginate.interface';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
