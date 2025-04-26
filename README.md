@@ -1,9 +1,11 @@
 # Day-Mood Backend Documentation
 
 ## Overview
+
 Day-Mood is a mobile application backend API that allows users to track their daily moods, activities, and reflections. The backend provides a RESTful API built with NestJS and uses Prisma ORM with PostgreSQL for data persistence.
 
 ## Tech Stack
+
 - **Framework**: NestJS 9.4.0
 - **Database**: PostgreSQL
 - **ORM**: Prisma
@@ -11,10 +13,13 @@ Day-Mood is a mobile application backend API that allows users to track their da
 - **Documentation**: Swagger/OpenAPI
 
 ## Database Schema
+
 The application uses the following data models:
 
 ### Users
+
 Stores user authentication and profile information:
+
 - `id`: Unique identifier (BigInt)
 - `email`: User's email address (unique)
 - `username`: User's display name
@@ -24,7 +29,9 @@ Stores user authentication and profile information:
 - `age`: User's age (optional)
 
 ### Moods
+
 Predefined mood options users can select:
+
 - `id`: Unique identifier
 - `name`: Name of the mood
 - `color`: Color code associated with the mood
@@ -33,7 +40,9 @@ Predefined mood options users can select:
 - `updated_time`: Last update timestamp
 
 ### Activities
+
 Predefined activities users can associate with their moods:
+
 - `id`: Unique identifier
 - `icon`: Icon name or path
 - `description`: Text description of the activity
@@ -41,7 +50,9 @@ Predefined activities users can associate with their moods:
 - `updated_time`: Last update timestamp
 
 ### Records
+
 User entries combining mood, activity, and notes:
+
 - `id`: Unique identifier
 - `note`: User's written reflection
 - `created_time`: Creation timestamp
@@ -52,7 +63,9 @@ User entries combining mood, activity, and notes:
 - `status`: Record status (ACTIVE, DRAFT, DELETED)
 
 ### Files
+
 Media files uploaded by users:
+
 - `id`: Unique identifier
 - `fname`: File name
 - `type`: MIME type
@@ -61,7 +74,9 @@ Media files uploaded by users:
 - `size`: File size
 
 ### Record Assets
+
 Junction table linking records with attached files:
+
 - `id`: Unique identifier
 - `record_id`: Associated record
 - `file_id`: Associated file
@@ -70,30 +85,35 @@ Junction table linking records with attached files:
 ## API Endpoints
 
 ### Authentication
+
 - **POST /auth/register**: Register a new user
 - **POST /auth/login**: Authenticate and receive JWT tokens
 - **POST /auth/refresh**: Refresh access token using refresh token
 - **POST /auth/logout**: Invalidate current tokens
 
 ### Users
+
 - **GET /users**: Get list of users (admin only)
 - **GET /users/:id**: Get user details
 - **PATCH /users/:id**: Update user profile
 - **DELETE /users/:id**: Delete user account
 
 ### Moods
+
 - **GET /moods**: Get all available moods
 - **POST /moods**: Create a new mood (admin only)
 - **PATCH /moods/:id**: Update mood (admin only)
 - **DELETE /moods/:id**: Delete mood (admin only)
 
 ### Activities
+
 - **GET /activities**: Get all available activities
 - **POST /activities**: Create a new activity (admin only)
 - **PATCH /activities/:id**: Update activity (admin only)
 - **DELETE /activities/:id**: Delete activity (admin only)
 
 ### Records
+
 - **GET /records**: Get user's records (supports filtering by date/mood/activity)
 - **POST /records**: Create a new record
 - **GET /records/:id**: Get record details
@@ -101,16 +121,20 @@ Junction table linking records with attached files:
 - **DELETE /records/:id**: Delete a record (soft delete)
 
 ### Files
+
 - **POST /files/upload**: Upload a file
 - **GET /files/:id**: Get file details
 - **DELETE /files/:id**: Delete a file
 
 ## Authentication
+
 The API uses JWT (JSON Web Tokens) for authentication with two token types:
+
 - **Access Token**: Short-lived token (15 minutes) for API access
 - **Refresh Token**: Long-lived token (7 days) to obtain new access tokens
 
 All protected endpoints require a valid access token in the `Authorization` header:
+
 ```
 Authorization: Bearer <access_token>
 ```
@@ -118,11 +142,13 @@ Authorization: Bearer <access_token>
 ## Installation & Setup
 
 ### Prerequisites
+
 - Node.js (v14+)
 - PostgreSQL
 - npm or yarn
 
 ### Installation Steps
+
 1. Clone the repository:
    ```bash
    git clone <repository_url>
@@ -153,11 +179,13 @@ Authorization: Bearer <access_token>
 The API will be available at `http://localhost:3000`.
 
 ## API Documentation
+
 Swagger documentation is available at `http://localhost:3000/api`.
 
 ## Development
 
 ### Available Scripts
+
 - `npm run build`: Build the application
 - `npm run format`: Format code with Prettier
 - `npm run start`: Start the application
@@ -167,7 +195,9 @@ Swagger documentation is available at `http://localhost:3000/api`.
 - `npm run test:e2e`: Run end-to-end tests
 
 ## Deployment
+
 For production deployment:
+
 1. Build the application:
    ```bash
    npm run build
@@ -182,7 +212,9 @@ For production deployment:
    ```
 
 ## Error Handling
+
 The API uses standard HTTP status codes:
+
 - **200 OK**: Successful request
 - **201 Created**: Resource created successfully
 - **400 Bad Request**: Invalid input
@@ -194,10 +226,15 @@ The API uses standard HTTP status codes:
 Error responses include an error message and details when applicable.
 
 ## Data Validation
+
 Input validation is performed using `class-validator` and `class-transformer` with DTO (Data Transfer Object) patterns.
 
 ## Contributors
+
 - Original development by Hỏi Dân IT
 
 ## License
+
 UNLICENSED
+
+<!-- VERSION_BADGE_PLACEHOLDER -->
