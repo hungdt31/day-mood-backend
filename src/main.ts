@@ -46,7 +46,7 @@ async function bootstrap() {
 
   // config swagger
   const config = new DocumentBuilder()
-    .setTitle('API documentation')
+    .setTitle('Day Mood API documentation')
     .setDescription('Restful API')
     .addBearerAuth(
       {
