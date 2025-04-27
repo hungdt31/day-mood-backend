@@ -3,33 +3,33 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id           Int   @id @default(autoincrement())
-  email        String   @unique
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
   username     String
   password     String
-  role         UserRole? @default(USER)
-  address      String?
   phone        String?
-  gender       UserGender? @default(OTHER)
   age          Int?
-  is_deleted   Boolean   @default(false)
+  is_deleted   Boolean     @default(false)
   deleted_at   DateTime?
-  created_time DateTime @default(now())
-  updated_time DateTime @updatedAt
-  avatar       File?    @relation("UserAvatar")
+  created_time DateTime    @default(now())
+  updated_time DateTime    @updatedAt
+  address      String?
+  role         UserRole?   @default(USER)
+  gender       UserGender? @default(OTHER)
+  avatar       File?       @relation("UserAvatar")
   records      Record[]
 
   @@map("users")
 }
 
 model Mood {
-  id           Int   @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   name         String
   created_time DateTime @default(now())
   updated_time DateTime @updatedAt
@@ -39,38 +39,34 @@ model Mood {
 }
 
 model Activity {
-  id           Int   @id @default(autoincrement())
-  name         String
-  created_time DateTime @default(now())
-  updated_time DateTime @updatedAt
-  records      ActivityRecord[]
+  id      Int              @id @default(autoincrement())
+  name    String
+  records ActivityRecord[]
 
   @@map("activities")
 }
 
 model Record {
-  id           Int       @id @default(autoincrement())
+  id           Int              @id @default(autoincrement())
   title        String
   content      String
-  status       RecordStatus @default(ACTIVE)
-  created_time DateTime     @default(now())
-  updated_time DateTime     @updatedAt
+  status       RecordStatus     @default(ACTIVE)
+  created_time DateTime         @default(now())
+  updated_time DateTime         @updatedAt
   mood_id      Int?
   user_id      Int
   activities   ActivityRecord[]
-  files         File[]
-  mood         Mood?        @relation(fields: [mood_id], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  files        File[]
+  mood         Mood?            @relation(fields: [mood_id], references: [id], onDelete: Cascade)
+  user         User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("records")
 }
 
-// Join table for many-to-many relationship
 model ActivityRecord {
   activity_id  Int
   record_id    Int
   created_time DateTime @default(now())
-  
   activity     Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
   record       Record   @relation(fields: [record_id], references: [id], onDelete: Cascade)
 
@@ -79,14 +75,14 @@ model ActivityRecord {
 }
 
 model File {
-  id           Int   @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   fname        String
   type         String
   url          String
   fkey         String
   size         Decimal
   record_id    Int?
-  user_id      Int?  @unique
+  user_id      Int?     @unique
   created_time DateTime @default(now())
   updated_time DateTime @updatedAt
   record       Record?  @relation(fields: [record_id], references: [id])

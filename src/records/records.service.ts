@@ -22,19 +22,15 @@ export class RecordsService {
 
   async create(createRecordDto: CreateRecordDto) {
     try {
-      await this.prismaService.$queryRaw`
+      const mood = await this.prismaService.$queryRaw`
         INSERT INTO moods ("name", "updated_time") VALUES(
           ${createRecordDto.mood},
           CURRENT_TIMESTAMP
-        );
-        `;
-      const mood = await this.prismaService.$queryRaw<any>`
-        SELECT "id" FROM moods
-        ORDER BY "id" DESC
-        LIMIT 1;
+        )
+        RETURNING *;
         `;
 
-      const result = await this.prismaService.$queryRaw`
+        const result =await this.prismaService.$queryRaw`
         INSERT INTO records ("title", "content", "updated_time", "mood_id", "user_id") VALUES (
           ${createRecordDto.title},
           ${createRecordDto.content},
@@ -42,9 +38,15 @@ export class RecordsService {
           CURRENT_TIMESTAMP,
           ${mood[0].id},
           ${createRecordDto.user_id}
-        );
+        )
+        RETURNING *;
           `;
-      return mood;
+
+      createRecordDto.activity_id.map(async val => {await this.prismaService.$queryRaw`
+        INSERT INTO activity_records VALUES (${val}, ${result[0].id});
+        `})
+
+      return result;
     } catch (error) {
       throw new BadRequestException('Error creating :' + error);
     }
@@ -76,11 +78,11 @@ export class RecordsService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     try {
       const result = await this.prismaService.$queryRaw<any>`
         SELECT * FROM records
-        WHERE "id" = ${Number(id)}
+        WHERE "id" = ${id}
         `;
       return result;
     } catch (error) {
@@ -88,46 +90,31 @@ export class RecordsService {
     }
   }
 
-  async update(id: string, updateRecordDto: UpdateRecordDto) {
+  async update(id: number, updateRecordDto: UpdateRecordDto) {
     try {
-      let val: string = '';
-      Object.keys(updateRecordDto).forEach((key) => {
-        val += `"${key}" = ${
-          typeof updateRecordDto[key] === 'number'
-            ? updateRecordDto[key]
-            : `'${updateRecordDto[key]}'`
-        }`;
+      return await this.prismaService.record.update({
+        where: {
+          id,
+        },
+        data: {
+          ...updateRecordDto },
       });
-
-      await this.prismaService
-        .$queryRaw`UPDATE records SET "title" = '30/04/2025' WHERE "id" = ${Number(
-        id,
-      )};`;
-
-      const result = await this.prismaService.$queryRaw<any>`
-        SELECT * FROM records
-        WHERE "id" = ${Number(id)}
-        `;
-      return result;
     } catch (error) {
       throw new BadRequestException('Error updating :' + error);
     }
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     try {
-      const result = await this.prismaService.$queryRaw<any>`
-        SELECT * FROM records
-        WHERE "id" = ${Number(id)}
-        `;
-      await this.prismaService.$queryRaw<any>`
-      DELETE * FROM records
-      WHERE "id" = ${Number(id)}
+      const result = await this.prismaService.$queryRaw`
+      DELETE FROM records
+      WHERE "id" = ${id}
+      RETURNING *;
       `;
 
       return result;
-    } catch (error) {
-      throw new BadRequestException('Error updating :' + error);
+4    } catch (error) {
+      throw new BadRequestException('Error removing :' + error);
     }
   }
 }
