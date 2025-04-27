@@ -6,12 +6,13 @@ import { RegisterDto } from 'src/auth/dto/create-user.dto';
 import { IUser } from '../interface/users.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { PaginateInfo } from 'src/interface/paginate.interface';
-import { PrismaService } from '../prisma/prisma.service';
-import { create } from 'domain';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService
+  ) {}
 
   getHashedPassword = (password: string) => {
     const salt = genSaltSync(10);
@@ -34,8 +35,7 @@ export class UsersService {
 
     return {
       id: res.id,
-      name: res.username,
-      createdAt: res.created_time
+      createdAt: res.username,
     };
   }
 
@@ -72,24 +72,25 @@ export class UsersService {
     // Add either select OR include based on which one is provided
     // Cannot use both simultaneously in Prisma
     if (select && Object.keys(select).length > 0) {
-      // Create a copy of select and remove password if it exists
-      const safeSelect = { ...select };
-      delete safeSelect.password; // Remove password key entirely
-
-      // Check if select becomes empty after removing password
-      if (Object.keys(safeSelect).length > 0) {
-        queryOptions.select = safeSelect;
-      } else {
-        delete queryOptions.select;
-      }
+      // Ensure password is excluded from select
+      queryOptions.select = {
+        ...select,
+        password: false,
+      };
     } else if (include && Object.keys(include).length > 0) {
-      queryOptions.include = include;
+      queryOptions.include = {
+        ...include,
+        // Exclude password from include if it exists
+        password: false,
+      };
+    } else {
+      // If neither select nor include provided, explicitly exclude password
+      queryOptions.select = { password: false };
     }
 
     // Execute query with correct options
-    // The original code used findWithDeleted, assuming it's a custom method/extension
-    // Adjust if using standard findMany
-    const users = await this.prisma.user.findMany(queryOptions); // Using standard findMany for clarity, adjust if findWithDeleted is intended
+    // @ts-ignore
+    const users = await this.prisma.user.findWithDeleted(queryOptions);
 
     return {
       meta: {
@@ -140,7 +141,10 @@ export class UsersService {
     return compareSync(password, hash);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, user: IUser, updateUserDto: UpdateUserDto) {
+    if (user.id !== id && user.role !== 'ADMIN') {
+      throw new BadRequestException('You cannot update information of another user');
+    }
     return await this.prisma.user.update({
       where: {
         id,

@@ -53,8 +53,8 @@ export const ErrorResponses = {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 401 },
-        message: { type: 'string', example: 'Unauthorized' },
-        error: { type: 'string', example: 'Your token is invalid or header is missing token' }
+        error: { type: 'string', example: 'Unauthorized' },
+        message: { type: 'string', example: 'Your token is invalid or header is missing token' }
       }
     }
   },
@@ -64,8 +64,8 @@ export const ErrorResponses = {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 403 },
-        message: { type: 'string', example: 'Forbidden resource' },
-        error: { type: 'string', example: 'You do not have permission to access this resource' }
+        error: { type: 'string', example: 'Forbidden resource' },
+        message: { type: 'string', example: 'You do not have permission to access this resource' }
       }
     }
   },
@@ -75,8 +75,8 @@ export const ErrorResponses = {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'Resource not found' },
-        error: { type: 'string', example: 'The requested resource could not be found' }
+        error: { type: 'string', example: 'Resource not found' },
+        message: { type: 'string', example: 'The requested resource could not be found' }
       }
     }
   },
@@ -86,8 +86,8 @@ export const ErrorResponses = {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 400 },
-        message: { type: 'string', example: 'Bad Request' },
-        error: { type: 'string', example: 'Invalid parameters provided' }
+        error: { type: 'string', example: 'Bad Request' },
+        message: { type: 'string', example: 'Invalid parameters provided' }
       }
     }
   }
