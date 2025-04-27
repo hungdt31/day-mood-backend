@@ -24,19 +24,8 @@ import { IUser } from '../interface/users.interface';
 import { UniqueGmail } from 'src/auth/gmail.guard';
 import { checkValidId } from 'src/core/id.guard';
 import { PaginateInfo } from 'src/interface/paginate.interface';
-import {
-  ApiQuery,
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBearerAuth,
-  ApiBody,
-} from '@nestjs/swagger';
-import {
-  ForbiddenResponseSchema,
-  UnauthorizedResponseSchema,
-} from 'src/core/transform.interceptor';
+import { ApiQuery, ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { ForbiddenResponseSchema, UnauthorizedResponseSchema } from 'src/core/transform.interceptor';
 
 @ApiTags('users')
 @ApiBearerAuth('token')
@@ -46,53 +35,53 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Create a new user',
-    description: 'Create a new user with provided data, login into admin account to use this API, email: admin@example.com, password: "admin"',
+    description: 'Create a new user with provided data'
   })
   @ApiBody({
     type: CreateUserDto,
-    description: 'User data to create',
+    description: 'User data to create'
   })
-  @ApiResponse({
-    status: 201,
+  @ApiResponse({ 
+    status: 201, 
     description: 'User created successfully',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 201 },
         message: { type: 'string', example: 'Create a user' },
-        data: {
+        data: { 
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
             email: { type: 'string', example: 'newuser@example.com' },
             username: { type: 'string', example: 'newuser' },
             role: { type: 'string', example: 'USER' },
-            createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-          },
-        },
-      },
-    },
+            createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' }
+          }
+        }
+      }
+    }
   })
-  @ApiResponse({
-    status: 400,
+  @ApiResponse({ 
+    status: 400, 
     description: 'Bad Request - Email already exists or validation error',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 400 },
-        message: { type: 'string', example: 'Email already exists' },
-      },
-    },
+        message: { type: 'string', example: 'Email already exists' }
+      }
+    }
   })
-  @ApiResponse({
-    status: 403,
+  @ApiResponse({ 
+    status: 403, 
     description: 'Forbidden - User does not have admin permissions',
-    schema: ForbiddenResponseSchema,
+    schema: ForbiddenResponseSchema
   })
   @ApiResponse({
     status: 401,
     description: 'Unauthorized - Invalid token or missing authentication',
-    schema: UnauthorizedResponseSchema,
+    schema: UnauthorizedResponseSchema
   })
   @Post()
   @UseGuards(UniqueGmail)
@@ -103,50 +92,43 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Get all users with pagination',
-    description: 'Retrieve a list of users with pagination support, login into admin account to use this API, email: admin@example.com, password: "admin"',
+    description: 'Retrieve a list of users with pagination support'
   })
-  @ApiQuery({
-    name: 'page',
-    description: 'Page number',
-    type: Number,
+  @ApiQuery({ 
+    name: 'page', 
+    description: 'Page number', 
+    type: Number, 
     required: false,
-    example: 1,
+    example: 1
   })
-  @ApiQuery({
-    name: 'limit',
-    description: 'Number of items per page',
-    type: Number,
+  @ApiQuery({ 
+    name: 'limit', 
+    description: 'Number of items per page', 
+    type: Number, 
     required: false,
-    example: 10,
+    example: 10
   })
-  @ApiQuery({
-    name: 'projection',
-    description: 'Fields to select',
-    type: String,
-    required: false,
-    example: 'id,email,username',
-  })
-  @ApiResponse({
-    status: 200,
+  @ApiResponse({ 
+    status: 200, 
     description: 'List of users retrieved successfully',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 200 },
         message: { type: 'string', example: 'Get a list of users' },
-        data: {
+        data: { 
           type: 'object',
           properties: {
-            meta: {
+            meta: { 
               type: 'object',
               properties: {
                 page: { type: 'number', example: 1 },
                 limit: { type: 'number', example: 10 },
                 total: { type: 'number', example: 50 },
-                totalPages: { type: 'number', example: 5 },
-              },
+                totalPages: { type: 'number', example: 5 }
+              }
             },
-            items: {
+            items: { 
               type: 'array',
               items: {
                 type: 'object',
@@ -159,31 +141,25 @@ export class UsersController {
                   age: { type: 'number', example: 25 },
                   gender: { type: 'string', example: 'MALE' },
                   role: { type: 'string', example: 'USER' },
-                  createdAt: {
-                    type: 'string',
-                    example: '2023-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2023-01-01T00:00:00.000Z',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+                  createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
+                  updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   })
-  @ApiResponse({
-    status: 403,
+  @ApiResponse({ 
+    status: 403, 
     description: 'Forbidden - User does not have admin permissions',
-    schema: ForbiddenResponseSchema,
+    schema: ForbiddenResponseSchema
   })
   @ApiResponse({
     status: 401,
     description: 'Unauthorized - Invalid token or missing authentication',
-    schema: UnauthorizedResponseSchema,
+    schema: UnauthorizedResponseSchema
   })
   @Get()
   @ResponseMessage('Get a list of users')
@@ -193,23 +169,23 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Get a user by ID',
-    description: 'Retrieve a single user by providing their ID, login into admin account to use this API, email: admin@example.com, pasword: "admin"',
+    description: 'Retrieve a single user by providing their ID'
   })
   @ApiParam({
     name: 'id',
     description: 'The ID of the user',
     type: Number,
-    example: 1,
+    example: 1
   })
-  @ApiResponse({
-    status: 200,
+  @ApiResponse({ 
+    status: 200, 
     description: 'User found and returned successfully',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 200 },
         message: { type: 'string', example: 'Get a user' },
-        data: {
+        data: { 
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
@@ -221,32 +197,32 @@ export class UsersController {
             gender: { type: 'string', example: 'MALE' },
             role: { type: 'string', example: 'USER' },
             createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-            updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-          },
-        },
-      },
-    },
+            updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' }
+          }
+        }
+      }
+    }
   })
-  @ApiResponse({
-    status: 404,
+  @ApiResponse({ 
+    status: 404, 
     description: 'User not found',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'User not found' },
-      },
-    },
+        message: { type: 'string', example: 'User not found' }
+      }
+    }
   })
-  @ApiResponse({
-    status: 403,
+  @ApiResponse({ 
+    status: 403, 
     description: 'Forbidden - User does not have admin permissions',
-    schema: ForbiddenResponseSchema,
+    schema: ForbiddenResponseSchema
   })
   @ApiResponse({
     status: 401,
     description: 'Unauthorized - Invalid token or missing authentication',
-    schema: UnauthorizedResponseSchema,
+    schema: UnauthorizedResponseSchema
   })
   @Get(':id')
   @UseGuards(checkValidId)
@@ -257,27 +233,27 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Update a user',
-    description: 'Update information of a user by ID, login into admin account to use this API, email: admin@example.com, pasword: "admin"',
+    description: 'Update a user\'s information by ID'
   })
   @ApiParam({
     name: 'id',
     description: 'The ID of the user to update',
     type: Number,
-    example: 1,
+    example: 1
   })
   @ApiBody({
     type: UpdateUserDto,
-    description: 'User data to update',
+    description: 'User data to update'
   })
-  @ApiResponse({
-    status: 200,
+  @ApiResponse({ 
+    status: 200, 
     description: 'User updated successfully',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 200 },
         message: { type: 'string', example: 'Update a user' },
-        data: {
+        data: { 
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
@@ -288,90 +264,102 @@ export class UsersController {
             age: { type: 'number', example: 30 },
             gender: { type: 'string', example: 'FEMALE' },
             role: { type: 'string', example: 'USER' },
-            updatedAt: { type: 'string', example: '2023-01-02T00:00:00.000Z' },
-          },
-        },
-      },
-    },
+            updatedAt: { type: 'string', example: '2023-01-02T00:00:00.000Z' }
+          }
+        }
+      }
+    }
   })
-  @ApiResponse({
-    status: 404,
+  @ApiResponse({ 
+    status: 404, 
     description: 'User not found',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'User not found' },
-      },
-    },
+        message: { type: 'string', example: 'User not found' }
+      }
+    }
   })
-  @ApiResponse({
-    status: 403,
+  @ApiResponse({ 
+    status: 403, 
     description: 'Forbidden - User does not have admin permissions',
-    schema: ForbiddenResponseSchema,
+    schema: ForbiddenResponseSchema
   })
   @ApiResponse({
     status: 401,
     description: 'Unauthorized - Invalid token or missing authentication',
-    schema: UnauthorizedResponseSchema,
+    schema: UnauthorizedResponseSchema
+  })
+  @ApiResponse({ 
+    status: 400, 
+    description: 'Bad Request - Insufficient permissions or invalid data',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 400 },
+        message: { type: 'string', example: 'You cannot update information of another user' },
+        error: { type: 'string', example: 'Bad Request' }
+      }
+    }
   })
   @Patch(':id')
   @UseGuards(checkValidId)
   @ResponseMessage('Update a user')
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto, @User() user: IUser) {
+    return this.usersService.update(id, user, updateUserDto);
   }
 
   @ApiOperation({
     summary: 'Delete a user',
-    description: 'Soft delete a user by moving them to trash, login into admin account to use this API, email: admin@example.com, pasword: "admin"',
+    description: 'Soft delete a user by moving them to trash'
   })
   @ApiParam({
     name: 'id',
     description: 'The ID of the user to delete',
     type: Number,
-    example: 1,
+    example: 1
   })
-  @ApiResponse({
-    status: 200,
+  @ApiResponse({ 
+    status: 200, 
     description: 'User deleted successfully',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 200 },
         message: { type: 'string', example: 'Take a user to trash' },
-        data: {
+        data: { 
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
             email: { type: 'string', example: 'user@example.com' },
             deleted: { type: 'boolean', example: true },
-            deletedAt: { type: 'string', example: '2023-01-02T00:00:00.000Z' },
-          },
-        },
-      },
-    },
+            deletedAt: { type: 'string', example: '2023-01-02T00:00:00.000Z' }
+          }
+        }
+      }
+    }
   })
-  @ApiResponse({
-    status: 404,
+  @ApiResponse({ 
+    status: 404, 
     description: 'User not found',
     schema: {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'User not found' },
-      },
-    },
+        message: { type: 'string', example: 'User not found' }
+      }
+    }
   })
-  @ApiResponse({
-    status: 403,
+  @ApiResponse({ 
+    status: 403, 
     description: 'Forbidden - User does not have admin permissions',
-    schema: ForbiddenResponseSchema,
+    schema: ForbiddenResponseSchema
   })
   @ApiResponse({
     status: 401,
     description: 'Unauthorized - Invalid token or missing authentication',
-    schema: UnauthorizedResponseSchema,
+    schema: UnauthorizedResponseSchema
   })
   @Delete(':id')
   @UseGuards(checkValidId)

@@ -66,12 +66,11 @@ export class RecordsService {
       return {
         meta: {
           totalRecords: +totalItems,
-          recordsCount: result.length,
           recordsPerPage: take,
           totalPages,
           currentPage: page,
         },
-        result: result,
+        items: result,
       };
     } catch (error) {
       throw new BadRequestException('Error finding :' + error);
@@ -79,15 +78,14 @@ export class RecordsService {
   }
 
   async findOne(id: number) {
-    try {
       const result = await this.prismaService.$queryRaw<any>`
         SELECT * FROM records
         WHERE "id" = ${id}
         `;
+      if (result.length === 0) {
+        throw new HttpException('Record not found', HttpStatus.NOT_FOUND);
+      }
       return result;
-    } catch (error) {
-      throw new BadRequestException('Error creating :' + error);
-    }
   }
 
   async update(id: number, updateRecordDto: UpdateRecordDto) {
@@ -100,21 +98,20 @@ export class RecordsService {
           ...updateRecordDto },
       });
     } catch (error) {
-      throw new BadRequestException('Error updating :' + error);
+      throw new HttpException('Record not found', HttpStatus.NOT_FOUND);
     }
   }
 
   async remove(id: number) {
-    try {
-      const result = await this.prismaService.$queryRaw`
+      const result = await this.prismaService.$queryRaw<any>`
       DELETE FROM records
       WHERE "id" = ${id}
       RETURNING *;
       `;
-
+      if (result.length === 0) {
+        throw new HttpException('Record not found', HttpStatus.NOT_FOUND);
+      }
       return result;
-4    } catch (error) {
-      throw new BadRequestException('Error removing :' + error);
-    }
+
   }
 }

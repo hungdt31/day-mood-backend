@@ -60,8 +60,8 @@ export const ForbiddenResponseSchema = {
   type: 'object',
   properties: {
     statusCode: { type: 'number', example: 403 },
-    message: { type: 'string', example: 'Forbidden resource' },
-    error: { type: 'string', example: 'You do not have permission to access this resource' }
+    error: { type: 'string', example: 'Forbidden' },
+    message: { type: 'string', example: 'You do not have permission to access this resource' }
   }
 };
 
@@ -69,7 +69,7 @@ export const UnauthorizedResponseSchema = {
   type: 'object',
   properties: {
     statusCode: { type: 'number', example: 401 },
-    message: { type: 'string', example: 'Unauthorized' },
-    error: { type: 'string', example: 'Your token is invalid or header is missing token' }
+    error: { type: 'string', example: 'Unauthorized' },
+    message: { type: 'string', example: 'Your token is invalid or header is missing token' }
   }
 };
