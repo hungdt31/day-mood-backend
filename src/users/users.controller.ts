@@ -35,7 +35,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Create a new user',
-    description: 'Create a new user with provided data'
+    description: 'Create a new user with provided data, use admin account to use this API, email: "admin@example.com", password: "admin" '
   })
   @ApiBody({
     type: CreateUserDto,
@@ -92,7 +92,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Get all users with pagination',
-    description: 'Retrieve a list of users with pagination support'
+    description: 'Retrieve a list of users with pagination support, use admin account to use this API, email: "admin@example.com", password: "admin" '
   })
   @ApiQuery({ 
     name: 'page', 
@@ -169,7 +169,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Get a user by ID',
-    description: 'Retrieve a single user by providing their ID'
+    description: 'Retrieve a single user by providing their ID, use admin account to use this API, email: "admin@example.com", password: "admin"'
   })
   @ApiParam({
     name: 'id',
@@ -312,7 +312,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'Delete a user',
-    description: 'Soft delete a user by moving them to trash'
+    description: 'Soft delete a user by moving them to trash, use admin account to use this API, email: "admin@example.com", password: "admin" '
   })
   @ApiParam({
     name: 'id',
