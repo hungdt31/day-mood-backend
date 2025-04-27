@@ -6,13 +6,11 @@ import { RegisterDto } from 'src/auth/dto/create-user.dto';
 import { IUser } from '../interface/users.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { PaginateInfo } from 'src/interface/paginate.interface';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private prisma: PrismaService
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   getHashedPassword = (password: string) => {
     const salt = genSaltSync(10);
@@ -143,7 +141,9 @@ export class UsersService {
 
   async update(id: number, user: IUser, updateUserDto: UpdateUserDto) {
     if (user.id !== id && user.role !== 'ADMIN') {
-      throw new BadRequestException('You cannot update information of another user');
+      throw new BadRequestException(
+        'You cannot update information of another user',
+      );
     }
     return await this.prisma.user.update({
       where: {
