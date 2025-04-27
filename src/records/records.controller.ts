@@ -119,7 +119,7 @@ export class RecordsController {
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete a record',
-    description: 'Sends a record to trash (soft delete)',
+    description: 'Sends a record to trash',
   })
   @ApiParam({
     name: 'id',

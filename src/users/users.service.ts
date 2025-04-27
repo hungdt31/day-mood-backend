@@ -7,6 +7,7 @@ import { IUser } from '../interface/users.interface';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { PaginateInfo } from 'src/interface/paginate.interface';
 import { PrismaService } from '../prisma/prisma.service';
+import { create } from 'domain';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +34,8 @@ export class UsersService {
 
     return {
       id: res.id,
-      createdAt: res.username,
+      name: res.username,
+      createdAt: res.created_time
     };
   }
 
