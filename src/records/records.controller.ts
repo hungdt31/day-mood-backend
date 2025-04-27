@@ -86,14 +86,14 @@ export class RecordsController {
   @ApiParam({
     name: 'id',
     description: 'Record ID',
-    type: String,
-    example: '1',
+    type: Number,
+    example: 1,
   })
   @ApiResponse({ status: 200, description: 'Record retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Record not found' })
   @ResponseMessage('Get a record')
-  findOne(@Param('id') id: string) {
-    return this.recordsService.findOne(id);
+  findOne(@Param('id') id: number) {
+    return this.recordsService.findOne(+id);
   }
 
   @Patch(':id')
@@ -104,16 +104,16 @@ export class RecordsController {
   @ApiParam({
     name: 'id',
     description: 'Record ID',
-    type: String,
-    example: '1',
+    type: Number,
+    example: 1,
   })
   @ApiResponse({ status: 200, description: 'Record updated successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Record not found' })
   @ResponseMessage('Update a record')
-  update(@Param('id') id: string, @Body() updateRecordDto: UpdateRecordDto) {
-    return this.recordsService.update(id, updateRecordDto);
+  update(@Param('id') id: number, @Body() updateRecordDto: UpdateRecordDto) {
+    return this.recordsService.update(+id, updateRecordDto);
   }
 
   @Delete(':id')
@@ -124,17 +124,18 @@ export class RecordsController {
   @ApiParam({
     name: 'id',
     description: 'Record ID',
-    type: String,
-    example: '1',
+    type: Number,
+    example: 1,
   })
   @ApiResponse({
     status: 200,
     description: 'Record moved to trash successfully',
   })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Record not found' })
   @ResponseMessage('Take a record to trash')
-  remove(@Param('id') id: string) {
-    return this.recordsService.remove(id);
+  remove(@Param('id') id: number) {
+    return this.recordsService.remove(+id);
   }
 }
