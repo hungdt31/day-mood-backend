@@ -116,7 +116,6 @@ export class UsersService {
         age: true,
         created_time: true,
         updated_time: true,
-        avatar: true,
         role: true,
       },
     });

@@ -8,14 +8,15 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  IsDateString,
 } from 'class-validator';
 
 export class CreateRecordDto {
   @ApiProperty({
-      example: 'Một ngày vui vẻ',
-      description: 'Title of the record',
-      required: true
-    })
+    example: 'Một ngày vui vẻ',
+    description: 'Title of the record',
+    required: true,
+  })
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -23,40 +24,51 @@ export class CreateRecordDto {
   @ApiProperty({
     example: 'Có nhiều điều thú vị',
     description: 'Content of the record',
-    required: false
+    required: false,
   })
-
   @IsString()
   @IsOptional()
   content: string;
+
   @ApiProperty({
     example: 1,
     description: 'User id',
-    required: true
+    required: true,
   })
   @IsPositive()
   user_id: number;
 
   @ApiProperty({
-    example: 'Joyful',
-    description: 'Mood of the record',
-    required: true
+    example: '2025-05-01T13:38:00.000Z',
+    description: 'Ngày của record',
+    required: false,
   })
-  @IsString()
-  mood: string;
+  @IsOptional()
+  @IsDateString()
+  date?: string;
 
   @ApiProperty({
-    example: [1,2,3],
-    description: 'Activity ids',
-    required: true
+    example: 5,
+    description: 'Mood ID',
+    required: false,
   })
-  @IsNumber({},{each:true})
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  mood_id?: number;
+
+  @ApiProperty({
+    example: [1, 2, 3],
+    description: 'Activity ids',
+    required: true,
+  })
+  @IsNumber({}, { each: true })
   activity_id: number[];
 
   @ApiProperty({
     example: 'ACTIVE',
     description: 'Status of the record',
-    required: true
+    required: true,
   })
   @IsOptional()
   status: RecordStatus;

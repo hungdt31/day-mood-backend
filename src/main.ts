@@ -29,7 +29,7 @@ async function bootstrap() {
   // config cors
   app.enableCors({
     origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
     credentials: true,
   });
@@ -85,12 +85,6 @@ async function bootstrap() {
   });
 
   // start server at port ${PORT}
-  await app.listen(configService.get<string>('PORT'), () => {
-    console.log(
-      `Server is running at http://localhost:${configService.get<string>(
-        'PORT',
-      )}`,
-    );
-  });
+  await app.listen(8000, '0.0.0.0');
 }
 bootstrap();

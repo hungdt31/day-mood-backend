@@ -33,7 +33,7 @@ export class TransformInterceptor<T>
     const isViewRoute =
       request.url.endsWith('.ejs') ||
       request.url.startsWith('/views/') ||
-      request.headers.accept.includes('text/html');
+      (request.headers.accept && request.headers.accept.includes('text/html'));
 
     if (isStaticAsset || isViewRoute) {
       return next.handle(); // Don't transform for static files or views
@@ -61,8 +61,11 @@ export const ForbiddenResponseSchema = {
   properties: {
     statusCode: { type: 'number', example: 403 },
     error: { type: 'string', example: 'Forbidden' },
-    message: { type: 'string', example: 'You do not have permission to access this resource' }
-  }
+    message: {
+      type: 'string',
+      example: 'You do not have permission to access this resource',
+    },
+  },
 };
 
 export const UnauthorizedResponseSchema = {
@@ -70,6 +73,9 @@ export const UnauthorizedResponseSchema = {
   properties: {
     statusCode: { type: 'number', example: 401 },
     error: { type: 'string', example: 'Unauthorized' },
-    message: { type: 'string', example: 'Your token is invalid or header is missing token' }
-  }
+    message: {
+      type: 'string',
+      example: 'Your token is invalid or header is missing token',
+    },
+  },
 };

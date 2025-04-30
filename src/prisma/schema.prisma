@@ -22,29 +22,12 @@ model User {
   address      String?
   role         UserRole?   @default(USER)
   gender       UserGender? @default(OTHER)
-  avatar       File?       @relation("UserAvatar")
+  files        File[]      @relation("UserFiles")
   records      Record[]
 
   @@map("users")
 }
 
-model Mood {
-  id           Int      @id @default(autoincrement())
-  name         String
-  created_time DateTime @default(now())
-  updated_time DateTime @updatedAt
-  records      Record[]
-
-  @@map("moods")
-}
-
-model Activity {
-  id      Int              @id @default(autoincrement())
-  name    String
-  records ActivityRecord[]
-
-  @@map("activities")
-}
 
 model Record {
   id           Int              @id @default(autoincrement())
@@ -53,11 +36,11 @@ model Record {
   status       RecordStatus     @default(ACTIVE)
   created_time DateTime         @default(now())
   updated_time DateTime         @updatedAt
+  date         DateTime         @default(now())
   mood_id      Int?
   user_id      Int
   activities   ActivityRecord[]
   files        File[]
-  mood         Mood?            @relation(fields: [mood_id], references: [id], onDelete: Cascade)
   user         User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("records")
@@ -67,7 +50,6 @@ model ActivityRecord {
   activity_id  Int
   record_id    Int
   created_time DateTime @default(now())
-  activity     Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
   record       Record   @relation(fields: [record_id], references: [id], onDelete: Cascade)
 
   @@id([activity_id, record_id])
@@ -81,12 +63,13 @@ model File {
   url          String
   fkey         String
   size         Decimal
+  duration     String?  // Thời lượng cho file audio
   record_id    Int?
-  user_id      Int?     @unique
+  user_id      Int?
   created_time DateTime @default(now())
   updated_time DateTime @updatedAt
-  record       Record?  @relation(fields: [record_id], references: [id])
-  user         User?    @relation("UserAvatar", fields: [user_id], references: [id])
+  record       Record?  @relation(fields: [record_id], references: [id], onDelete: Cascade)
+  user         User?    @relation("UserFiles", fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("files")
 }

@@ -6,7 +6,7 @@ import { RecordsModule } from './records/records.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
-
+import { FilesModule } from './files/files.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -14,6 +14,7 @@ import { PrismaModule } from './prisma/prisma.module';
     }),
     UsersModule,
     RecordsModule,
+    FilesModule,
     AuthModule,
     PrismaModule,
   ],
