@@ -28,12 +28,13 @@ export class RecordsService {
 
   async create(createRecordDto: CreateRecordDto) {
     try {
-      // Tạo record
+      // Tạo record với các trường tùy chọn
+      // Nếu chỉ có mood_id và datetime được cung cấp, sử dụng giá trị mặc định cho các trường khác
       const newRecord = await this.prismaService.record.create({
         data: {
-          title: createRecordDto.title,
-          content: createRecordDto.content,
-          status: createRecordDto.status,
+          title: createRecordDto.title || '',
+          content: createRecordDto.content || '',
+          status: createRecordDto.status || 'ACTIVE',
           mood_id: createRecordDto.mood_id,
           user_id: createRecordDto.user_id,
           date: createRecordDto.date

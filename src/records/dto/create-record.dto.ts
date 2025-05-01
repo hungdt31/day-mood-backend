@@ -15,11 +15,11 @@ export class CreateRecordDto {
   @ApiProperty({
     example: 'Một ngày vui vẻ',
     description: 'Title of the record',
-    required: true,
+    required: false,
   })
   @IsString()
-  @IsNotEmpty()
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @ApiProperty({
     example: 'Có nhiều điều thú vị',
@@ -28,7 +28,7 @@ export class CreateRecordDto {
   })
   @IsString()
   @IsOptional()
-  content: string;
+  content?: string;
 
   @ApiProperty({
     example: 1,
@@ -50,26 +50,26 @@ export class CreateRecordDto {
   @ApiProperty({
     example: 5,
     description: 'Mood ID',
-    required: false,
+    required: true,
   })
-  @IsOptional()
   @IsNumber()
   @IsPositive()
-  mood_id?: number;
+  mood_id: number;
 
   @ApiProperty({
     example: [1, 2, 3],
     description: 'Activity ids',
-    required: true,
+    required: false,
   })
+  @IsOptional()
   @IsNumber({}, { each: true })
-  activity_id: number[];
+  activity_id?: number[];
 
   @ApiProperty({
     example: 'ACTIVE',
     description: 'Status of the record',
-    required: true,
+    required: false,
   })
   @IsOptional()
-  status: RecordStatus;
+  status?: RecordStatus;
 }
